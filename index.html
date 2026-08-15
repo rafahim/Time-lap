@@ -608,7 +608,7 @@
             month: 7,        // March (0=January, 1=February, 2=March)
             day: 16,          // Day
             hour: 5,         // 12:00 AM (midnight)
-            minute: 05,       // 0 minutes
+            minute: 16,       // 0 minutes
             age: 17,
             name: "Othoy.."
         };
@@ -1193,12 +1193,18 @@
             }
             
             const diff = birthday - now;
+            // Round up to whole seconds so the on-screen "Secs" counter and the audio
+            // trigger below both agree on exactly when "10 seconds left" happens —
+            // using raw diff (ms) for one and floor(diff/1000) for the other let the
+            // two drift apart by up to a second because setInterval doesn't fire at
+            // perfectly even 1000ms intervals.
+            const totalSecondsLeft = Math.ceil(diff / 1000);
             
             if (diff > 0) {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const mins = Math.floor((diff / (1000 * 60)) % 60);
-                const secs = Math.floor((diff / 1000) % 60);
+                const days = Math.floor(totalSecondsLeft / (60 * 60 * 24));
+                const hours = Math.floor((totalSecondsLeft / (60 * 60)) % 24);
+                const mins = Math.floor((totalSecondsLeft / 60) % 60);
+                const secs = totalSecondsLeft % 60;
                 
                 document.getElementById('days').textContent = String(days).padStart(2, '0');
                 document.getElementById('hours').textContent = String(hours).padStart(2, '0');
@@ -1206,8 +1212,10 @@
                 document.getElementById('secs').textContent = String(secs).padStart(2, '0');
             }
             
-            // Play countdown audio in last 10 seconds
-            if (diff <= 10000 && diff > 0 && !countdownAudioPlayed && audioAllowed) {
+            // Play countdown audio in last 10 seconds — now driven by the same
+            // totalSecondsLeft value shown on screen, so it fires exactly when the
+            // counter reads "10", not a second early or late.
+            if (totalSecondsLeft <= 10 && diff > 0 && !countdownAudioPlayed && audioAllowed) {
                 countdownAudio.play()
                     .then(() => { countdownAudioPlayed = true; })
                     .catch(error => {});
