@@ -607,8 +607,8 @@
         const CONFIG = {
             month: 7,        // March (0=January, 1=February, 2=March)
             day: 16,          // Day
-            hour: 04,         // 12:00 AM (midnight)
-            minute: 58,       // 0 minutes
+            hour: 5,         // 12:00 AM (midnight)
+            minute: 01,       // 0 minutes
             age: 17,
             name: "Othoy.."
         };
@@ -922,7 +922,7 @@
         // Letter content, typed out line by line in a handwriting-style font, like it's being
         // written in front of you rather than just appearing all at once.
         const letterLines = [
-            "Every laugh, every chat, and every moment we've shared has been truly special my Friend.💫",
+            "Every laugh, every chat, and every moment we've shared has been truly special.💫",
             "I'm so grateful for the bond we have, and for the positivity.",
             "On your birthday, I just wish for endless happiness, love, and success to come your way.🌸",
             "You deserve all the joy in the world—keep shining and spreading your beautiful energy.✨",
@@ -1028,7 +1028,9 @@
         }
 
         function isBirthday(date) {
-            return date.getMonth() === CONFIG.month && date.getDate() === CONFIG.day;
+            if (date.getMonth() !== CONFIG.month || date.getDate() !== CONFIG.day) return false;
+            const target = new Date(date.getFullYear(), CONFIG.month, CONFIG.day, CONFIG.hour, CONFIG.minute, 0);
+            return date >= target;
         }
 
         // Lightbox functions — swipeable like a real photo album: drag/swipe or use the arrows
