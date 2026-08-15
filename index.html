@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 
-    <meta property="og:title" content="Happy Birthday!">
-    <meta property="og:description" content="A special birthday surprise">
-    <meta property="og:image" content="https://res.cloudinary.com/dpctt0wao/image/upload/v1773163463/WhatsApp_Image_2026-03-10_at_11.18.34_PM_nc8tpd.jpg">
+    <meta property="og:title" content="Happy Birthday! 💫">
+    <meta property="og:description" content="A special surprise is waiting for you... tap to open 🎁">
     <meta property="og:url" content="https://rafahimnn.github.io">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
@@ -32,6 +31,7 @@
         @keyframes spin { from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
         .custom-cursor { width:30px; height:30px; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:difference; transition:transform 0.1s; }
         .custom-cursor svg { width:100%; height:100%; filter:drop-shadow(0 0 5px rgba(255,182,193,0.5)); }
+        @media (hover: none), (pointer: coarse) { .custom-cursor { display:none; } }
         .floating-hearts { position:fixed; width:100%; height:100%; pointer-events:none; z-index:2; }
         .heart-float { position:absolute; font-size:1.5rem; color:rgba(255,105,180,0.6); animation:floatHeart var(--float-duration,6s) ease-in-out infinite; animation-delay:var(--delay,0s); }
         @keyframes floatHeart { 0%{ transform:translate(0,100vh) rotate(0deg); } 100%{ transform:translate(var(--translate-x,0), -100vh) rotate(360deg); } }
@@ -65,17 +65,45 @@
         .enter-btn:hover { transform:scale(1.1); box-shadow:0 0 25px rgba(255,105,180,0.7); }
         .cake-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); z-index:800; padding:20px; text-align:center; }
         .cake-screen.show { display:flex; }
-        .cake-container { background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); padding:30px 20px; border-radius:40px; border:1px solid rgba(255,255,255,0.3); max-width:500px; width:100%; box-shadow:0 15px 35px rgba(0,0,0,0.2); }
-        .cake-emoji { font-size:clamp(80px,18vw,110px); text-align:center; filter:drop-shadow(0 10px 20px rgba(255,105,180,0.4)); animation:softBounce 2s infinite; }
+        .cake-container { background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), rgba(232,201,214,0.22) 60%, rgba(201,166,192,0.18)), rgba(255,255,255,0.14); backdrop-filter:blur(10px); padding:30px 20px; border-radius:40px; border:1px solid rgba(255,255,255,0.3); max-width:500px; width:100%; box-shadow:0 15px 35px rgba(0,0,0,0.2); }
+        .cake-stage { display:flex; align-items:flex-end; justify-content:center; gap:clamp(8px,4vw,28px); position:relative; }
+        .cake-emoji { display:flex; justify-content:center; align-items:center; position:relative; animation:softBounce 2s infinite; touch-action:none; cursor:pointer; }
         @keyframes softBounce { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+        .cake-svg { width:clamp(220px,60vw,300px); height:auto; filter:drop-shadow(0 14px 26px rgba(140,100,170,0.45)); }
+        #sliceLine, #sliceShadow { transition:stroke-dashoffset 0.05s linear; }
+        .knife-cursor { position:absolute; top:0; left:0; font-size:2rem; pointer-events:none; opacity:0; transition:opacity 0.15s, transform 0.08s linear; transform:translate(-50%,-50%) rotate(var(--knife-rot,-25deg)); filter:drop-shadow(0 4px 6px rgba(0,0,0,0.35)); z-index:5; }
+        .knife-cursor.active { opacity:1; }
+        .cake-wedge-gap { opacity:0; transition:opacity 0.2s; }
+        .cake-emoji.cake-cut .cake-wedge-gap { opacity:1; }
+        .cake-emoji.knife-active { animation-play-state:paused; }
+        .cake-emoji.cake-cut #sliceLine, .cake-emoji.cake-cut #sliceShadow { opacity:0; transition:opacity 0.25s; }
+        .plate-wrap { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; position:relative; }
+        .plate-svg { width:clamp(58px,16vw,86px); height:auto; filter:drop-shadow(0 8px 14px rgba(0,0,0,0.25)); }
+        .plate-slice { position:absolute; font-size:clamp(28px,7vw,38px); opacity:0; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3)); z-index:6; transform-origin:center; }
+        .knife-holder { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; gap:6px; }
+        .table-knife { display:inline-block; font-size:clamp(26px,7vw,34px); transform:rotate(-60deg); opacity:0.55; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25)) grayscale(0.3); transition:opacity 0.3s,transform 0.3s,filter 0.3s; cursor:default; user-select:none; }
+        .table-knife.ready { opacity:1; filter:drop-shadow(0 0 10px gold) drop-shadow(0 4px 6px rgba(0,0,0,0.3)); cursor:pointer; animation:knifeInvite 1.4s ease-in-out infinite; }
+        @keyframes knifeInvite { 0%,100%{ transform:rotate(-60deg) translateY(0); } 50%{ transform:rotate(-52deg) translateY(-4px); } }
+        .table-knife.picked { opacity:0; transform:rotate(-60deg) scale(0.6) translateY(10px); pointer-events:none; }
+        .knife-holder-label { font-size:11px; color:rgba(255,255,255,0.85); text-shadow:1px 1px 3px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.3s; text-align:center; max-width:70px; }
+        .knife-holder-label.show { opacity:1; }
+        .cut-hint { font-size:14px; color:white; text-shadow:1px 1px 3px rgba(0,0,0,0.5); margin:16px 0 6px; opacity:0.75; transition:0.3s; }
+        .cut-hint.ready { opacity:1; animation:softPulse 1.5s infinite; font-weight:600; }
         .candles { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; margin:20px 0; min-height:80px; }
         .candle { cursor:pointer; transition:0.2s; animation:flicker 0.5s infinite alternate; display:inline-block; font-size:clamp(30px,8vw,42px); filter:drop-shadow(0 0 8px gold); }
         .candle.blown { opacity:0.2; filter:grayscale(1); pointer-events:none; animation:none; }
         @keyframes flicker { from{ opacity:1; transform:scale(1); } to{ opacity:0.8; transform:scale(1.1); } }
         .cake-status { font-size:clamp(16px,4vw,20px); color:white; margin:20px 0; padding:12px; border-radius:40px; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); text-shadow:1px 1px 4px rgba(0,0,0,0.5); }
-        .cut-btn { background:linear-gradient(45deg,gold,red); color:black; font-size:clamp(20px,5vw,24px); padding:12px 25px; border:none; border-radius:40px; font-weight:bold; cursor:pointer; transition:0.3s; border:2px solid white; width:100%; box-shadow:0 8px 15px rgba(0,0,0,0.3); text-shadow:1px 1px 2px rgba(255,255,255,0.5); }
-        .cut-btn:disabled { opacity:0.3; cursor:not-allowed; }
-        .cut-btn:not(:disabled):hover { transform:scale(1.05); box-shadow:0 0 25px gold; }
+        .mic-hint { font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:12px; text-shadow:1px 1px 3px rgba(0,0,0,0.5); padding:8px 14px; border-radius:20px; transition:0.3s; display:inline-block; }
+        .mic-hint.listening { color:#fff; background:rgba(255,105,180,0.35); animation:softPulse 1s infinite; font-weight:600; }
+        .mic-hint.denied { color:#ffe0e0; }
+        .wish-prompt { position:absolute; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:radial-gradient(circle, rgba(40,20,60,0.55), rgba(20,10,35,0.85)); border-radius:40px; z-index:20; text-align:center; padding:20px; }
+        .wish-prompt-emoji { font-size:clamp(2.5rem,10vw,3.5rem); animation:wishTwinkle 1.6s ease-in-out infinite; }
+        @keyframes wishTwinkle { 0%,100%{ transform:scale(1) rotate(0deg); opacity:1; } 50%{ transform:scale(1.15) rotate(8deg); opacity:0.85; } }
+        .wish-prompt-text { font-family:'Dancing Script',cursive; font-size:clamp(1.6rem,6vw,2.2rem); color:#fff; text-shadow:2px 2px 10px rgba(0,0,0,0.6); }
+        .wish-prompt-sub { font-size:14px; color:rgba(255,255,255,0.8); }
+        @keyframes cakeShake { 0%,100%{ transform:translateX(0) rotate(0deg); } 20%{ transform:translateX(-6px) rotate(-1.5deg); } 40%{ transform:translateX(5px) rotate(1deg); } 60%{ transform:translateX(-4px) rotate(-1deg); } 80%{ transform:translateX(3px) rotate(0.5deg); } }
+        .cake-emoji.cake-shaking { animation:cakeShake 0.4s ease-in-out; }
         .cake-next-btn { margin-top:20px; padding:12px 30px; background:linear-gradient(45deg,#9b6dff,#ff6dc7); border:none; border-radius:50px; color:white; font-size:1.2rem; cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(155,109,255,0.4); transition:0.3s; display:inline-block; border:2px solid white; }
         .cake-next-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(155,109,255,0.6); }
         .reasons-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(-45deg,#ffe6e6,#e6e6ff,#ffebf5); background-size:400% 400%; animation:gradientBG 15s ease infinite; z-index:750; padding:20px; }
@@ -84,7 +112,7 @@
         .reasons-container { width:100%; max-width:1000px; margin:0 auto; min-height:300px; display:flex; justify-content:center; align-items:center; }
         .reason-card { background:rgba(255,255,255,0.95); border-radius:20px; padding:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.15); text-align:center; max-width:950px; width:100%; transition:transform 0.3s,box-shadow 0.3s; cursor:pointer; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.3); }
         .reason-card:hover { transform:translateY(-5px); box-shadow:0 15px 35px rgba(255,105,180,0.2); }
-        .reason-text { font-size:1.2rem; line-height:1.4; color:#4a4a4a; margin-bottom:1rem; font-weight:500; white-space:nowrap; overflow:visible; text-overflow:clip; max-width:100%; }
+        .reason-text { font-size:clamp(1rem,2.4vw,1.2rem); line-height:1.5; color:#4a4a4a; margin-bottom:1rem; font-weight:500; white-space:normal; overflow-wrap:break-word; max-width:100%; }
         .reason-emoji { font-size:2.5rem; }
         .gif-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s; z-index:10; }
         .reason-card:hover .gif-overlay { opacity:1; }
@@ -123,20 +151,20 @@
         .video-wrapper video { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; }
         .video-next-btn { display:block; margin:40px auto 20px; padding:12px 30px; background:linear-gradient(45deg,#ff69b4,#ff99cc); border:none; border-radius:50px; color:white; font-size:1.2rem; cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(255,105,180,0.4); transition:0.3s; border:2px solid white; max-width:300px; }
         .video-next-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(255,105,180,0.6); }
-        .letter-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#fdfbfb 0%,#ebedee 100%); z-index:500; padding:20px; }
+        .letter-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#fdfbfb 0%,#ebedee 100%); z-index:500; padding:20px; box-sizing:border-box; overflow-y:auto; }
         .letter-screen.show { display:flex; }
-        .letter-container { max-width:600px; background:rgba(255,255,255,0.9); padding:2rem; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; }
-        .letter-container h2 { font-family:'Dancing Script',cursive; font-size:2.5rem; color:#b0306e; margin-bottom:1rem; }
-        .letter-content { font-size:1.2rem; line-height:1.8; color:#2c3e50; font-weight:500; white-space:pre-line; }
-        .letter-return-btn { margin-top:20px; padding:12px 30px; background:linear-gradient(45deg,#ff69b4,#ff99cc); border:none; border-radius:50px; color:white; font-size:1.2rem; cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(255,105,180,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; }
+        .letter-container { width:100%; max-width:600px; box-sizing:border-box; background:rgba(255,255,255,0.9); padding:clamp(1.25rem,5vw,2rem); border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; margin:auto; }
+        .letter-container h2 { font-family:'Dancing Script',cursive; font-size:clamp(1.8rem,7vw,2.5rem); color:#b0306e; margin-bottom:1rem; overflow-wrap:break-word; }
+        .letter-content { font-size:clamp(1rem,4vw,1.2rem); line-height:1.8; color:#2c3e50; font-weight:500; white-space:pre-line; overflow-wrap:break-word; word-break:break-word; }
+        .letter-return-btn { margin-top:20px; padding:clamp(10px,3vw,12px) clamp(18px,6vw,30px); background:linear-gradient(45deg,#ff69b4,#ff99cc); border:none; border-radius:50px; color:white; font-size:clamp(0.95rem,3.6vw,1.2rem); cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(255,105,180,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; max-width:100%; white-space:normal; line-height:1.3; }
         .letter-return-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(255,105,180,0.6); }
-        .secret-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#ffe6f0,#ffe0f0); z-index:550; padding:20px; }
+        .secret-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#ffe6f0,#ffe0f0); z-index:550; padding:20px; box-sizing:border-box; overflow-y:auto; -webkit-overflow-scrolling:touch; }
         .secret-screen.show { display:flex; }
-        .secret-container { max-width:600px; width:100%; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); padding:2rem; border-radius:40px; box-shadow:0 20px 40px rgba(0,0,0,0.3); text-align:center; border:2px solid white; }
-        .secret-photo { width:100%; max-height:400px; object-fit:cover; border-radius:30px; box-shadow:0 15px 30px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.3s; border:3px solid white; animation:photoReveal 0.8s ease-out; }
+        .secret-container { max-width:600px; width:100%; box-sizing:border-box; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); padding:clamp(1.25rem,5vw,2rem); border-radius:30px; box-shadow:0 20px 40px rgba(0,0,0,0.3); text-align:center; border:2px solid white; margin:auto; }
+        .secret-photo { width:100%; max-height:min(400px,45vh); object-fit:cover; border-radius:24px; box-shadow:0 15px 30px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.3s; border:3px solid white; animation:photoReveal 0.8s ease-out; display:block; }
         .secret-photo:hover { transform:scale(1.02); }
         @keyframes photoReveal { 0%{ opacity:0; transform:scale(0.8); } 100%{ opacity:1; transform:scale(1); } }
-        .soulmate-btn { margin-top:30px; padding:12px 30px; background:linear-gradient(45deg,#9b6dff,#ff6dc7); border:none; border-radius:50px; color:white; font-size:1.2rem; cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(155,109,255,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; animation:btnPop 0.5s ease-out 0.3s both; }
+        .soulmate-btn { margin-top:clamp(16px,4vw,30px); padding:clamp(10px,3vw,12px) clamp(20px,6vw,30px); background:linear-gradient(45deg,#9b6dff,#ff6dc7); border:none; border-radius:50px; color:white; font-size:clamp(1rem,3.6vw,1.2rem); cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(155,109,255,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; animation:btnPop 0.5s ease-out 0.3s both; max-width:100%; white-space:normal; }
         @keyframes btnPop { 0%{ opacity:0; transform:scale(0.8); } 100%{ opacity:1; transform:scale(1); } }
         .soulmate-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(155,109,255,0.6); }
         .lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10001; justify-content:center; align-items:center; padding:20px; }
@@ -169,7 +197,6 @@
         .close-contact-btn:hover { background:gold; color:black; transform:scale(1.03); }
         @media (max-width:768px) { 
             .reasons-header h1 { font-size:2.5rem; } 
-            .reason-text { font-size:1rem; white-space:normal; } 
             .photo-header h1 { font-size:2.5rem; } 
             .photo-container { grid-template-columns:1fr; } 
             .video-grid { grid-template-columns:1fr; } 
@@ -236,11 +263,146 @@
     </div>
 
     <div class="cake-screen" id="cakeScreen">
-        <div class="cake-container">
-            <div class="cake-emoji" id="cakeEmoji">🎂</div>
+        <div class="cake-container" style="position:relative;">
+            <div class="wish-prompt" id="wishPrompt">
+                <div class="wish-prompt-emoji">🌟</div>
+                <div class="wish-prompt-text">চোখ বন্ধ করে একটা wish করো...</div>
+                <div class="wish-prompt-sub">তারপর মোমবাতিতে ফুঁ দাও 🕯️</div>
+            </div>
+            <div class="cake-stage" id="cakeStage">
+                <div class="knife-holder">
+                    <span class="table-knife" id="tableKnife" onclick="pickUpKnife()" role="button" aria-label="Pick up knife">🔪</span>
+                    <span class="knife-holder-label" id="knifeHolderLabel">ছুরিতে ট্যাপ করো</span>
+                </div>
+                <div class="cake-emoji" id="cakeEmoji">
+                <svg class="cake-svg" id="cakeSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="cakeTop" cx="35%" cy="30%" r="75%">
+                            <stop offset="0%" stop-color="#d6c3e6"/>
+                            <stop offset="60%" stop-color="#b79fcf"/>
+                            <stop offset="100%" stop-color="#a087bf"/>
+                        </radialGradient>
+                        <linearGradient id="cakeSide" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#9d84b6"/>
+                            <stop offset="100%" stop-color="#83699e"/>
+                        </linearGradient>
+                        <linearGradient id="sliceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fffaf1"/>
+                            <stop offset="45%" stop-color="#f3d9b1"/>
+                            <stop offset="55%" stop-color="#e0b98c"/>
+                            <stop offset="100%" stop-color="#c99a68"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- thin rim / side sliver so it reads as a plate viewed from above -->
+                    <path d="M 25 195 A 175 160 0 0 0 375 195 L 375 214 A 175 160 0 0 1 25 214 Z" fill="url(#cakeSide)"/>
+
+                    <!-- cake top, near-circular for a top-down look -->
+                    <ellipse cx="200" cy="195" rx="175" ry="160" fill="url(#cakeTop)"/>
+
+                    <!-- frosting speckle / spatula texture -->
+                    <g fill="#ffffff" opacity="0.25">
+                        <circle cx="110" cy="95" r="2"/>
+                        <circle cx="290" cy="120" r="1.6"/>
+                        <circle cx="250" cy="75" r="1.8"/>
+                        <circle cx="325" cy="175" r="2"/>
+                        <circle cx="80" cy="180" r="1.6"/>
+                        <circle cx="200" cy="80" r="1.4"/>
+                        <circle cx="60" cy="140" r="1.8"/>
+                        <circle cx="335" cy="230" r="1.5"/>
+                        <circle cx="160" cy="70" r="1.5"/>
+                        <circle cx="300" cy="270" r="1.7"/>
+                    </g>
+
+                    <!-- tulip bouquet, sweeping diagonally from lower-left like the reference photo -->
+                    <g transform="translate(55,110)">
+                        <!-- stems bundled to a bow near the bottom -->
+                        <path d="M45 190 C 55 150, 30 110, 46 55" stroke="#93b184" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 38 148, 60 108, 68 50" stroke="#7fa072" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 50 152, 15 118, 20 65" stroke="#93b184" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 54 154, 78 116, 88 62" stroke="#7fa072" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 42 150, 40 100, 42 68" stroke="#93b184" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 60 158, 6 128, 10 90" stroke="#7fa072" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M45 190 C 34 156, 90 132, 100 96" stroke="#93b184" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+                        <!-- leaves -->
+                        <path d="M42 150 C 10 145, -2 118, 22 105 C 34 120, 40 138, 42 150 Z" fill="#93b184"/>
+                        <path d="M50 152 C 82 144, 96 114, 70 100 C 58 116, 52 136, 50 152 Z" fill="#7fa072"/>
+
+                        <!-- ribbon bow -->
+                        <circle cx="45" cy="186" r="6" fill="#f5ecdf"/>
+                        <path d="M45 186 C 15 172, 8 204, 42 196" fill="none" stroke="#f5ecdf" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M45 186 C 75 172, 82 204, 48 196" fill="none" stroke="#f5ecdf" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M45 190 L 32 220" stroke="#f5ecdf" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M48 190 L 60 222" stroke="#f5ecdf" stroke-width="4" stroke-linecap="round"/>
+
+                        <!-- tulip heads: three overlapping petals each -->
+                        <g transform="translate(46,50) rotate(-4)">
+                            <ellipse cx="-9" cy="-3" rx="11" ry="19" fill="#e8ccd9"/>
+                            <ellipse cx="9" cy="-3" rx="11" ry="19" fill="#c993b3"/>
+                            <ellipse cx="0" cy="-11" rx="11" ry="20" fill="#d8a9c4"/>
+                        </g>
+                        <g transform="translate(18,62) rotate(-24)">
+                            <ellipse cx="-8" cy="-3" rx="9" ry="17" fill="#bd85a8"/>
+                            <ellipse cx="8" cy="-3" rx="9" ry="17" fill="#e2c2d3"/>
+                            <ellipse cx="0" cy="-10" rx="9" ry="18" fill="#cd9bb9"/>
+                        </g>
+                        <g transform="translate(70,58) rotate(20)">
+                            <ellipse cx="-8" cy="-3" rx="9" ry="17" fill="#e8ccd9"/>
+                            <ellipse cx="8" cy="-3" rx="9" ry="17" fill="#bd85a8"/>
+                            <ellipse cx="0" cy="-10" rx="9" ry="18" fill="#d8a9c4"/>
+                        </g>
+                        <g transform="translate(4,88) rotate(-34)">
+                            <ellipse cx="-7" cy="-2" rx="8" ry="15" fill="#cd9bb9"/>
+                            <ellipse cx="7" cy="-2" rx="8" ry="15" fill="#e8ccd9"/>
+                            <ellipse cx="0" cy="-9" rx="8" ry="16" fill="#bd85a8"/>
+                        </g>
+                        <g transform="translate(96,88) rotate(30)">
+                            <ellipse cx="-7" cy="-2" rx="8" ry="15" fill="#e2c2d3"/>
+                            <ellipse cx="7" cy="-2" rx="8" ry="15" fill="#bd85a8"/>
+                            <ellipse cx="0" cy="-9" rx="8" ry="16" fill="#cd9bb9"/>
+                        </g>
+                        <g transform="translate(46,20) rotate(-2)">
+                            <ellipse cx="-7" cy="-2" rx="8" ry="14" fill="#e8ccd9"/>
+                            <ellipse cx="7" cy="-2" rx="8" ry="14" fill="#cd9bb9"/>
+                            <ellipse cx="0" cy="-9" rx="8" ry="15" fill="#bd85a8"/>
+                        </g>
+                        <g transform="translate(75,34) rotate(14)">
+                            <ellipse cx="-6" cy="-2" rx="7" ry="13" fill="#d8a9c4"/>
+                            <ellipse cx="6" cy="-2" rx="7" ry="13" fill="#e2c2d3"/>
+                            <ellipse cx="0" cy="-8" rx="7" ry="14" fill="#c993b3"/>
+                        </g>
+                    </g>
+
+                    <!-- piped text, kept nearly level like the photo -->
+                    <text x="270" y="120" font-family="'Dancing Script', cursive" font-weight="700" font-size="32" fill="#fdf8f0" text-anchor="middle" transform="rotate(-2 270 120)">happy</text>
+                    <text x="270" y="153" font-family="'Dancing Script', cursive" font-weight="700" font-size="32" fill="#fdf8f0" text-anchor="middle" transform="rotate(-2 270 153)">birthday</text>
+                    <path d="M266 169 c-4 -6 -14 -2 -8 6 c3 4 8 4 8 4 s5 0 8 -4 c6 -8 -4 -12 -8 -6 z" fill="#fdf8f0" opacity="0.9"/>
+                    <text x="270" y="203" font-family="'Dancing Script', cursive" font-weight="700" font-size="25" fill="#fdf8f0" text-anchor="middle" transform="rotate(-2 270 203)">Othoy</text>
+
+                    <!-- cake cross-section revealed while dragging the knife, like a real slice opening up -->
+                    <line id="sliceShadow" x1="45" y1="199" x2="355" y2="199" stroke="#5b4636" stroke-width="9" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.35"/>
+                    <line id="sliceLine" x1="45" y1="195" x2="355" y2="195" stroke="url(#sliceGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.97"/>
+
+                    <!-- a wedge of cake that "goes missing" once the slice is served onto the plate -->
+                    <path class="cake-wedge-gap" d="M 200 195 L 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240 Z" fill="#7a6350"/>
+                    <path class="cake-wedge-gap" d="M 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240" fill="none" stroke="url(#sliceGrad)" stroke-width="6"/>
+                </svg>
+                <span class="knife-cursor" id="knifeCursor">🔪</span>
+                </div>
+                <div class="plate-wrap">
+                    <svg class="plate-svg" viewBox="0 0 100 46" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="50" cy="24" rx="46" ry="16" fill="#f3eee6"/>
+                        <ellipse cx="50" cy="21" rx="46" ry="16" fill="#fffdfa"/>
+                        <ellipse cx="50" cy="21" rx="34" ry="10.5" fill="none" stroke="#e6ddcf" stroke-width="1.5"/>
+                    </svg>
+                    <span class="plate-slice" id="plateSlice">🍰</span>
+                </div>
+            </div>
+            <div class="mic-hint" id="micHint">🎤 তোমার মাইক দিয়ে ফুঁ দিয়ে মোমবাতি নিভাও, অথবা ট্যাপ করো</div>
             <div class="candles" id="candles"></div>
             <div class="cake-status" id="cakeStatus"></div>
-            <button class="cut-btn" id="cutBtn" onclick="cutCake()" disabled>🍰 Cut Cake</button>
+            <div class="cut-hint" id="cutHint">🔪 কেকের উপর মাউস বা আঙুল দিয়ে ধরে টেনে কাটো</div>
             <button class="cake-next-btn" id="cakeNextBtn" onclick="goToReasonsScreen()" style="display:none;">Enter your storyline 💫</button>
         </div>
     </div>
@@ -456,11 +618,14 @@
         }
         setInterval(createFloatingHeart, 800);
 
-        // Custom cursor
+        // Custom cursor (desktop / mouse only — hidden on touch via CSS)
         const cursor = document.querySelector('.custom-cursor');
-        document.addEventListener('mousemove', (e) => { 
-            gsap.to(cursor, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.2 }); 
-        });
+        const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => { 
+                gsap.to(cursor, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.2 }); 
+            });
+        }
 
         // Audio elements
         const countdownAudio = document.getElementById('countdownAudio');
@@ -481,6 +646,91 @@
         let audioAllowed = false;
         let resetTimer = null;
         let charIndex = 0;
+        let micActive = false;
+        let micAutoRequested = false;
+        let micDenied = false;
+        let knifePickedUp = false;
+
+        // --- Realistic sound effects, synthesized with Web Audio (no extra files needed) ---
+        let sfxCtx = null;
+        function getSfxCtx() {
+            if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (sfxCtx.state === 'suspended') sfxCtx.resume();
+            return sfxCtx;
+        }
+        function playBlowPuff() {
+            try {
+                const ctx = getSfxCtx();
+                const bufferSize = ctx.sampleRate * 0.25;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+                const noise = ctx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 900;
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+                noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+                noise.start(); noise.stop(ctx.currentTime + 0.25);
+            } catch (e) {}
+        }
+        function playCutSlice() {
+            try {
+                const ctx = getSfxCtx();
+                const bufferSize = ctx.sampleRate * 0.18;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+                const noise = ctx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.setValueAtTime(2200, ctx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.18);
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.18, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+                noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+                noise.start(); noise.stop(ctx.currentTime + 0.18);
+            } catch (e) {}
+        }
+        function playCakeThud() {
+            try {
+                const ctx = getSfxCtx();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.3);
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + 0.35);
+            } catch (e) {}
+        }
+        function playWishChime() {
+            try {
+                const ctx = getSfxCtx();
+                [880, 1108, 1318].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    const gain = ctx.createGain();
+                    const start = ctx.currentTime + idx * 0.12;
+                    gain.gain.setValueAtTime(0, start);
+                    gain.gain.linearRampToValueAtTime(0.12, start + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.6);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(start); osc.stop(start + 0.6);
+                });
+            } catch (e) {}
+        }
+        function vibrate(pattern) {
+            if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
+        }
 
         // Reasons data (removed GIF references since files don't exist)
         const reasons = [
@@ -749,15 +999,54 @@
                     updateHistory('cake');
                     loadCakeState();
                     gsap.fromTo('#cakeScreen', {opacity:0}, {opacity:1, duration:0.5});
+                    showWishMoment();
                 }
             });
         };
+
+        // A short, real "make a wish" beat before the candles become blowable.
+        function showWishMoment() {
+            // Real birthdays have music playing while you make a wish — start the background
+            // track here too (it keeps playing through candles and cutting).
+            const now = new Date();
+            if (isBirthday(now) && !birthdayAudioPlayed) {
+                playBirthdayAudio();
+            }
+
+            const prompt = document.getElementById('wishPrompt');
+            if (!prompt || cakeCut || candlesBlown === totalCandles) {
+                if (prompt) prompt.style.display = 'none';
+                requestMicAuto();
+                return;
+            }
+            prompt.style.display = 'flex';
+            gsap.fromTo(prompt, { opacity:0 }, { opacity:1, duration:0.6 });
+            playWishChime();
+            setTimeout(() => {
+                gsap.to(prompt, {
+                    opacity:0, duration:0.6,
+                    onComplete:() => {
+                        prompt.style.display = 'none';
+                        // Ask for mic permission automatically right as the candles become blowable —
+                        // no button needed, the browser's own permission popup handles it.
+                        requestMicAuto();
+                    }
+                });
+            }, 2600);
+        }
+
+        function requestMicAuto() {
+            if (micAutoRequested || cakeCut || candlesBlown === totalCandles) return;
+            micAutoRequested = true;
+            startMicrophone();
+        }
 
         function loadCakeState() {
             const today = new Date();
             const dateKey = getDateKey(today);
             cakeCut = localStorage.getItem(`cut_${dateKey}`) === 'true';
             candlesBlown = parseInt(localStorage.getItem(`blown_${dateKey}`) || '0');
+            knifePickedUp = false;
             
             // If birthday is over, reset for next year
             if (!isBirthday(today)) {
@@ -778,23 +1067,36 @@
             const cakeEmoji = document.getElementById('cakeEmoji');
             const candlesDiv = document.getElementById('candles');
             const statusDiv = document.getElementById('cakeStatus');
-            const cutBtn = document.getElementById('cutBtn');
             const nextBtn = document.getElementById('cakeNextBtn');
+            const micHint = document.getElementById('micHint');
+            const cutHint = document.getElementById('cutHint');
+            const wishPrompt = document.getElementById('wishPrompt');
+            const tableKnife = document.getElementById('tableKnife');
+            const knifeLabel = document.getElementById('knifeHolderLabel');
             
             if (cakeCut) {
-                cakeEmoji.textContent = '🍰'; 
+                cakeEmoji.classList.add('cake-cut');
                 candlesDiv.innerHTML = ''; 
                 statusDiv.textContent = '🎉 Cake cut! Happy Birthday! 🎉';
-                cutBtn.style.display = 'none'; 
-                nextBtn.style.display = 'block';
+                nextBtn.style.display = 'inline-block';
+                micHint.style.display = 'none';
+                cutHint.style.display = 'none';
+                if (wishPrompt) wishPrompt.style.display = 'none';
+                if (tableKnife) tableKnife.classList.remove('ready');
+                if (knifeLabel) knifeLabel.classList.remove('show');
                 stopMicrophone(); 
+                placeSliceOnPlateStatic();
                 return;
             }
             
-            cakeEmoji.textContent = '🎂'; 
-            cutBtn.style.display = 'block'; 
-            cutBtn.disabled = true;
+            cakeEmoji.classList.remove('cake-cut');
+            if (!knifePickedUp) cakeEmoji.classList.remove('knife-active');
             nextBtn.style.display = 'none';
+            micHint.style.display = 'block';
+            cutHint.style.display = 'block';
+            cutHint.classList.remove('ready');
+            resetSliceLine();
+            hideSliceFromPlate();
             
             let candlesHtml = '';
             for (let i = 0; i < totalCandles; i++) {
@@ -804,13 +1106,17 @@
             candlesDiv.innerHTML = candlesHtml;
             
             if (candlesBlown === totalCandles) { 
-                statusDiv.textContent = '🎉 All candles blown! Now cut the cake'; 
-                cutBtn.disabled = false; 
+                statusDiv.textContent = knifePickedUp ? '🔪 এবার কেকের উপর ধরে বাঁ থেকে ডানে টানো' : '🎉 All candles blown! ছুরিতে ট্যাপ করো'; 
+                cutHint.classList.add('ready');
+                micHint.style.display = 'none';
+                if (tableKnife && !knifePickedUp) tableKnife.classList.add('ready');
+                if (knifeLabel && !knifePickedUp) knifeLabel.classList.add('show');
                 stopMicrophone(); 
             } else { 
                 const remaining = totalCandles - candlesBlown; 
                 statusDiv.textContent = `${remaining} candles burning - Blow or tap`; 
-                cutBtn.disabled = true;
+                if (tableKnife) tableKnife.classList.remove('ready');
+                if (knifeLabel) knifeLabel.classList.remove('show');
             }
         }
 
@@ -825,6 +1131,8 @@
             candlesBlown = index + 1; 
             saveState(); 
             renderCake(); 
+            playBlowPuff();
+            vibrate(25);
             confetti({ particleCount:5, spread:30, colors:['#aaaaaa'] });
         };
 
@@ -835,14 +1143,21 @@
                 candlesBlown = newBlown; 
                 saveState(); 
                 renderCake(); 
+                playBlowPuff();
+                vibrate(30);
                 confetti({ particleCount:8 * count, spread:40, colors:['#aaaaaa'] }); 
             }
         }
 
+        // No button anymore — the browser's own permission popup is triggered automatically
+        // (see requestMicAuto/showWishMoment). If the person denies it or the device has no
+        // mic, the candles simply stay tap-to-blow, which already works.
         function startMicrophone() {
             if (cakeCut || candlesBlown === totalCandles) return;
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                console.log('Microphone not supported');
+                const hint = document.getElementById('micHint');
+                hint.textContent = '⚠️ এই ডিভাইসে মাইক্রোফোন সাপোর্ট নেই — ট্যাপ করে নিভাও';
+                hint.classList.add('denied');
                 return;
             }
             
@@ -855,6 +1170,13 @@
                     source.connect(analyser);
                     analyser.fftSize = 256;
                     const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                    micActive = true;
+                    micDenied = false;
+                    const micHint = document.getElementById('micHint');
+                    micHint.classList.add('listening');
+                    micHint.classList.remove('denied');
+                    micHint.textContent = '🎤 এখন ফুঁ দাও...';
                     
                     if (blowInterval) clearInterval(blowInterval);
                     blowInterval = setInterval(() => {
@@ -871,7 +1193,12 @@
                         }
                     }, 150);
                 })
-                .catch(() => {});
+                .catch(() => {
+                    micDenied = true;
+                    const hint = document.getElementById('micHint');
+                    hint.textContent = '⚠️ মাইক পারমিশন দেওয়া হয়নি — শুধু ট্যাপ করে মোমবাতি নিভাও';
+                    hint.classList.add('denied');
+                });
         }
 
         function stopMicrophone() {
@@ -887,6 +1214,14 @@
                 audioContext.close(); 
                 audioContext = null; 
             }
+            micActive = false;
+            const micHint = document.getElementById('micHint');
+            if (micHint) {
+                micHint.classList.remove('listening');
+                if (candlesBlown < totalCandles && !cakeCut && !micDenied) {
+                    micHint.textContent = '🎤 তোমার মাইক দিয়ে ফুঁ দিয়ে মোমবাতি নিভাও, অথবা ট্যাপ করো';
+                }
+            }
         }
 
         window.cutCake = function() {
@@ -896,11 +1231,217 @@
             cakeCut = true;
             localStorage.setItem(`cut_${dateKey}`, 'true');
             stopMicrophone();
+
+            // Physical, real-feeling payoff (no sound here — just the jiggle + haptics)
+            vibrate([15, 40, 60]);
+            const zone = document.getElementById('cakeEmoji');
+            if (zone) {
+                zone.classList.add('cake-shaking');
+                setTimeout(() => zone.classList.remove('cake-shaking'), 420);
+            }
+            const knife = document.getElementById('knifeCursor');
+            if (knife) {
+                gsap.to(knife, { opacity:0, scale:0.8, duration:0.3, delay:0.2, onComplete:()=>{ knife.classList.remove('active'); gsap.set(knife,{scale:1}); } });
+            }
+
             renderCake();
+            serveSliceOntoPlate();
             confetti({ particleCount:150, spread:80 });
+            // Warm crumb-colored particles alongside the usual confetti, so it reads as cake, not just a party popper
+            confetti({ particleCount:40, spread:50, colors:['#e0b98c','#c99a68','#f3d9b1'], scalar:0.6 });
             setTimeout(() => confetti({ particleCount:100, spread:60, colors:['gold','hotpink'] }), 200);
             setTimeout(() => confetti({ particleCount:100, spread:60, colors:['cyan','purple'] }), 400);
         };
+
+        // If the cake was already cut earlier (e.g. page reload), show the slice sitting on the
+        // plate right away instead of skipping straight to the empty-plate state.
+        function placeSliceOnPlateStatic() {
+            const slice = document.getElementById('plateSlice');
+            const plateWrap = document.querySelector('.plate-wrap');
+            if (!slice || !plateWrap) return;
+            slice.style.position = 'absolute';
+            slice.style.left = '50%';
+            slice.style.bottom = '18%';
+            slice.style.top = 'auto';
+            slice.style.transform = 'translate(-50%,0) rotate(8deg) scale(0.95)';
+            slice.style.opacity = '1';
+        }
+
+        function hideSliceFromPlate() {
+            const slice = document.getElementById('plateSlice');
+            if (!slice) return;
+            gsap.killTweensOf(slice);
+            slice.style.opacity = '0';
+        }
+
+        // Animate the cut wedge actually leaving the cake and landing on the plate beside it
+        function serveSliceOntoPlate() {
+            const slice = document.getElementById('plateSlice');
+            const cakeZone = document.getElementById('cakeEmoji');
+            const plateWrap = document.querySelector('.plate-wrap');
+            if (!slice || !cakeZone || !plateWrap) return;
+
+            const cakeRect = cakeZone.getBoundingClientRect();
+            const plateRect = plateWrap.getBoundingClientRect();
+
+            // Start roughly where the wedge sits on the cake (right-of-center)
+            const startX = cakeRect.left + cakeRect.width * 0.78;
+            const startY = cakeRect.top + cakeRect.height * 0.5;
+            // Land centered on the plate
+            const endX = plateRect.left + plateRect.width / 2;
+            const endY = plateRect.top + plateRect.height * 0.4;
+
+            slice.style.position = 'fixed';
+            slice.style.left = startX + 'px';
+            slice.style.top = startY + 'px';
+            slice.style.transform = 'translate(-50%,-50%) rotate(0deg) scale(1)';
+            slice.style.opacity = '1';
+
+            gsap.timeline()
+                .to(slice, {
+                    left: (startX + endX) / 2,
+                    top: Math.min(startY, endY) - 60,
+                    rotation: 25,
+                    duration: 0.35,
+                    ease: 'power1.out'
+                })
+                .to(slice, {
+                    left: endX,
+                    top: endY,
+                    rotation: 8,
+                    scale: 0.85,
+                    duration: 0.35,
+                    ease: 'power1.in',
+                    onComplete: () => { vibrate(20); }
+                })
+                .to(slice, { scale: 0.95, duration: 0.12, yoyo: true, repeat: 1 });
+        }
+
+        // Drag-to-cut: hold the knife and swipe across the cake instead of tapping a button
+        const CUT_DRAG_THRESHOLD = 130; // px of horizontal drag needed to complete the cut
+        const SLICE_LINE_LENGTH = 330;
+        let cutDragActive = false;
+        let cutStartX = 0;
+        let cutLastX = 0;
+
+        function resetSliceLine() {
+            const line = document.getElementById('sliceLine');
+            const shadow = document.getElementById('sliceShadow');
+            if (line) line.style.strokeDashoffset = String(SLICE_LINE_LENGTH);
+            if (shadow) shadow.style.strokeDashoffset = String(SLICE_LINE_LENGTH);
+        }
+
+        function canDragCut() {
+            return !cakeCut && candlesBlown === totalCandles;
+        }
+
+        function updateKnifePosition(clientX, clientY) {
+            const zone = document.getElementById('cakeEmoji');
+            const knife = document.getElementById('knifeCursor');
+            if (!zone || !knife) return;
+            const rect = zone.getBoundingClientRect();
+            knife.style.left = (clientX - rect.left) + 'px';
+            knife.style.top = (clientY - rect.top) + 'px';
+        }
+
+        // Real life: you pick the knife up off the table first, THEN you cut.
+        window.pickUpKnife = function() {
+            if (!canDragCut()) {
+                const zone = document.getElementById('cakeEmoji');
+                if (zone && !cakeCut && candlesBlown < totalCandles) {
+                    gsap.to(zone, { x:-8, duration:0.06, yoyo:true, repeat:5, onComplete:()=>{ gsap.set(zone,{x:0}); } });
+                }
+                return;
+            }
+            if (knifePickedUp) return;
+            knifePickedUp = true;
+            vibrate(15);
+
+            const tableKnife = document.getElementById('tableKnife');
+            const label = document.getElementById('knifeHolderLabel');
+            if (tableKnife) tableKnife.classList.remove('ready');
+            if (tableKnife) tableKnife.classList.add('picked');
+            if (label) label.classList.remove('show');
+
+            // The blade lifts off the table and hovers over the left edge of the cake, ready to slice
+            const zone = document.getElementById('cakeEmoji');
+            const knife = document.getElementById('knifeCursor');
+            if (zone) zone.classList.add('knife-active'); // cake stops floating once the knife is in hand — feels grounded, like real cutting
+            if (zone && knife) {
+                const rect = zone.getBoundingClientRect();
+                knife.style.setProperty('--knife-rot', '-35deg');
+                knife.style.left = (rect.width * 0.1) + 'px';
+                knife.style.top = (rect.height * 0.5) + 'px';
+                knife.classList.add('active');
+                gsap.fromTo(knife, { scale:1.3, opacity:0 }, { scale:1, opacity:1, duration:0.35, ease:'back.out' });
+            }
+
+            const statusDiv = document.getElementById('cakeStatus');
+            const cutHint = document.getElementById('cutHint');
+            if (statusDiv) statusDiv.textContent = '🔪 এবার কেকের উপর ধরে বাঁ থেকে ডানে টানো';
+            if (cutHint) cutHint.classList.add('ready');
+        };
+
+        function onCutPointerDown(e) {
+            const zone = document.getElementById('cakeEmoji');
+            if (!canDragCut()) {
+                if (!cakeCut && candlesBlown < totalCandles) {
+                    gsap.to(zone, { x:-8, duration:0.06, yoyo:true, repeat:5, onComplete:()=>{ gsap.set(zone,{x:0}); } });
+                }
+                return;
+            }
+            // Touching the cake before tapping the knife still works — it just picks the knife up for you first
+            if (!knifePickedUp) pickUpKnife();
+            cutDragActive = true;
+            cutStartX = e.clientX;
+            cutLastX = e.clientX;
+            document.getElementById('knifeCursor').classList.add('active');
+            updateKnifePosition(e.clientX, e.clientY);
+            if (zone.setPointerCapture) { try { zone.setPointerCapture(e.pointerId); } catch(err) {} }
+        }
+
+        function onCutPointerMove(e) {
+            if (!cutDragActive) return;
+            updateKnifePosition(e.clientX, e.clientY);
+
+            // Tilt the blade with the direction of the stroke, like an actual hand sawing through cake
+            const stepDelta = e.clientX - cutLastX;
+            cutLastX = e.clientX;
+            const knife = document.getElementById('knifeCursor');
+            if (knife && Math.abs(stepDelta) > 0.5) {
+                const tilt = Math.max(-55, Math.min(-5, -30 - stepDelta * 2));
+                knife.style.setProperty('--knife-rot', tilt + 'deg');
+            }
+
+            const dragDist = Math.abs(e.clientX - cutStartX);
+            const progress = Math.min(dragDist / CUT_DRAG_THRESHOLD, 1);
+            const line = document.getElementById('sliceLine');
+            const shadow = document.getElementById('sliceShadow');
+            const offset = String(SLICE_LINE_LENGTH - SLICE_LINE_LENGTH * progress);
+            if (line) line.style.strokeDashoffset = offset;
+            if (shadow) shadow.style.strokeDashoffset = offset;
+
+            // A tiny buzz as the knife actually moves through the cake (no sound, just haptics)
+            if (dragDist > 4) vibrate(4);
+
+            if (progress >= 1) {
+                cutDragActive = false;
+                cutCake();
+            }
+        }
+
+        function onCutPointerUp() {
+            if (!cutDragActive) return;
+            cutDragActive = false;
+            // The knife is already in hand — it stays hovering over the cake rather than vanishing,
+            // just like you wouldn't drop the knife after a half-finished cut in real life.
+            if (!cakeCut) resetSliceLine();
+        }
+
+        document.getElementById('cakeEmoji').addEventListener('pointerdown', onCutPointerDown);
+        document.getElementById('cakeEmoji').addEventListener('pointermove', onCutPointerMove);
+        window.addEventListener('pointerup', onCutPointerUp);
+        window.addEventListener('pointercancel', onCutPointerUp);
 
         function createReasonCard(reason) {
             const card = document.createElement('div');
