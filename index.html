@@ -12,7 +12,7 @@
     
     <title>Wait for countdown 💫</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Caveat:wght@500;600;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
@@ -66,10 +66,14 @@
         .cake-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); z-index:800; padding:20px; text-align:center; }
         .cake-screen.show { display:flex; }
         .cake-container { background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), rgba(232,201,214,0.22) 60%, rgba(201,166,192,0.18)), rgba(255,255,255,0.14); backdrop-filter:blur(10px); padding:30px 20px; border-radius:40px; border:1px solid rgba(255,255,255,0.3); max-width:500px; width:100%; box-shadow:0 15px 35px rgba(0,0,0,0.2); }
-        .cake-stage { display:flex; align-items:flex-end; justify-content:center; gap:clamp(8px,4vw,28px); position:relative; }
-        .cake-emoji { display:flex; justify-content:center; align-items:center; position:relative; animation:softBounce 2s infinite; touch-action:none; cursor:pointer; }
+        .cake-stage { display:flex; align-items:flex-end; justify-content:center; gap:clamp(4px,2.5vw,16px); position:relative; }
+        .cake-emoji { display:flex; justify-content:center; align-items:center; position:relative; animation:softBounce 2s infinite; touch-action:none; cursor:pointer; flex-shrink:0; }
         @keyframes softBounce { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
-        .cake-svg { width:clamp(220px,60vw,300px); height:auto; filter:drop-shadow(0 14px 26px rgba(140,100,170,0.45)); }
+        /* Sized so knife-holder + cake + plate never add up to more than the card can hold —
+           previously this overflowed on both small phones and mid-width screens, pushing the
+           plate off the visible edge, which is why the served slice looked like it "flew off"
+           instead of landing on the plate. */
+        .cake-svg { width:clamp(140px,48vw,260px); height:auto; filter:drop-shadow(0 14px 26px rgba(140,100,170,0.45)); }
         #sliceLine, #sliceShadow { transition:stroke-dashoffset 0.05s linear; }
         .knife-cursor { position:absolute; top:0; left:0; font-size:2rem; pointer-events:none; opacity:0; transition:opacity 0.15s, transform 0.08s linear; transform:translate(-50%,-50%) rotate(var(--knife-rot,-25deg)); filter:drop-shadow(0 4px 6px rgba(0,0,0,0.35)); z-index:5; }
         .knife-cursor.active { opacity:1; }
@@ -78,14 +82,14 @@
         .cake-emoji.knife-active { animation-play-state:paused; }
         .cake-emoji.cake-cut #sliceLine, .cake-emoji.cake-cut #sliceShadow { opacity:0; transition:opacity 0.25s; }
         .plate-wrap { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; position:relative; }
-        .plate-svg { width:clamp(58px,16vw,86px); height:auto; filter:drop-shadow(0 8px 14px rgba(0,0,0,0.25)); }
-        .plate-slice { position:absolute; font-size:clamp(28px,7vw,38px); opacity:0; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3)); z-index:6; transform-origin:center; }
+        .plate-svg { width:clamp(40px,11vw,70px); height:auto; filter:drop-shadow(0 8px 14px rgba(0,0,0,0.25)); }
+        .plate-slice { position:absolute; width:clamp(30px,8vw,44px); height:auto; opacity:0; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3)); z-index:6; transform-origin:center; }
         .knife-holder { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; gap:6px; }
-        .table-knife { display:inline-block; font-size:clamp(26px,7vw,34px); transform:rotate(-60deg); opacity:0.55; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25)) grayscale(0.3); transition:opacity 0.3s,transform 0.3s,filter 0.3s; cursor:default; user-select:none; }
+        .table-knife { display:inline-block; font-size:clamp(22px,6vw,30px); transform:rotate(-60deg); opacity:0.55; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25)) grayscale(0.3); transition:opacity 0.3s,transform 0.3s,filter 0.3s; cursor:default; user-select:none; }
         .table-knife.ready { opacity:1; filter:drop-shadow(0 0 10px gold) drop-shadow(0 4px 6px rgba(0,0,0,0.3)); cursor:pointer; animation:knifeInvite 1.4s ease-in-out infinite; }
         @keyframes knifeInvite { 0%,100%{ transform:rotate(-60deg) translateY(0); } 50%{ transform:rotate(-52deg) translateY(-4px); } }
         .table-knife.picked { opacity:0; transform:rotate(-60deg) scale(0.6) translateY(10px); pointer-events:none; }
-        .knife-holder-label { font-size:11px; color:rgba(255,255,255,0.85); text-shadow:1px 1px 3px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.3s; text-align:center; max-width:70px; }
+        .knife-holder-label { font-size:10px; color:rgba(255,255,255,0.85); text-shadow:1px 1px 3px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.3s; text-align:center; max-width:50px; }
         .knife-holder-label.show { opacity:1; }
         .cut-hint { font-size:14px; color:white; text-shadow:1px 1px 3px rgba(0,0,0,0.5); margin:16px 0 6px; opacity:0.75; transition:0.3s; }
         .cut-hint.ready { opacity:1; animation:softPulse 1.5s infinite; font-weight:600; }
@@ -96,6 +100,7 @@
         /* Gives each flame a slightly different, wind-like sway instead of every candle moving in lockstep */
         @keyframes candleSway { 0%,100%{ rotate:var(--sway-neg,-3deg); } 50%{ rotate:var(--sway-pos,3deg); } }
         .sparkle-trail { position:fixed; top:0; left:0; pointer-events:none; z-index:9998; font-size:14px; will-change:transform,opacity; }
+        .smoke-wisp { position:fixed; top:0; left:0; pointer-events:none; z-index:9997; font-size:15px; will-change:transform,opacity; filter:blur(0.3px); }
         .cake-status { font-size:clamp(16px,4vw,20px); color:white; margin:20px 0; padding:12px; border-radius:40px; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); text-shadow:1px 1px 4px rgba(0,0,0,0.5); }
         .mic-hint { font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:12px; text-shadow:1px 1px 3px rgba(0,0,0,0.5); padding:8px 14px; border-radius:20px; transition:0.3s; display:inline-block; }
         .mic-hint.listening { color:#fff; background:rgba(255,105,180,0.35); animation:softPulse 1s infinite; font-weight:600; }
@@ -173,6 +178,14 @@
         .envelope-scene.hidden { display:none; }
         .letter-container h2 { font-family:'Dancing Script',cursive; font-size:clamp(1.8rem,7vw,2.5rem); color:#b0306e; margin-bottom:1rem; overflow-wrap:break-word; }
         .letter-content { font-size:clamp(1rem,4vw,1.2rem); line-height:1.8; color:#2c3e50; font-weight:500; white-space:pre-line; overflow-wrap:break-word; word-break:break-word; }
+        /* Handwriting-style reveal for the letter: each line "writes itself" onto the page,
+           like a real note being written, instead of appearing all at once. Uses Caveat
+           (a looser, more personal handwriting font) rather than Dancing Script, which is
+           already used for the headings/titles elsewhere on the site — this keeps the letter
+           feeling like a distinct, handwritten note rather than more of the same lettering. */
+        .letter-content p { font-family:'Caveat',cursive; font-size:clamp(1.6rem,6.5vw,2.3rem); font-weight:600; color:#33445c; margin-bottom:0.35em; min-height:1.2em; letter-spacing:0.3px; transform-origin:left center; }
+        .letter-typing-cursor { display:inline-block; width:2px; height:0.9em; vertical-align:-0.1em; margin-left:2px; background:#c71585; animation:letterCaretBlink 0.8s step-end infinite; }
+        @keyframes letterCaretBlink { 0%,49%{ opacity:1; } 50%,100%{ opacity:0; } }
         .letter-return-btn { margin-top:20px; padding:clamp(10px,3vw,12px) clamp(18px,6vw,30px); background:linear-gradient(45deg,#ff69b4,#ff99cc); border:none; border-radius:50px; color:white; font-size:clamp(0.95rem,3.6vw,1.2rem); cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(255,105,180,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; max-width:100%; white-space:normal; line-height:1.3; }
         .letter-return-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(255,105,180,0.6); }
         .secret-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#ffe6f0,#ffe0f0); z-index:550; padding:20px; box-sizing:border-box; overflow-y:auto; -webkit-overflow-scrolling:touch; }
@@ -410,9 +423,12 @@
                     <line id="sliceShadow" x1="45" y1="199" x2="355" y2="199" stroke="#5b4636" stroke-width="9" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.35"/>
                     <line id="sliceLine" x1="45" y1="195" x2="355" y2="195" stroke="url(#sliceGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.97"/>
 
-                    <!-- the wedge of cake that "goes missing" once the slice is served onto the plate -->
-                    <path class="cake-wedge-gap" id="wedgeFill" d="M 200 195 L 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240 Z" fill="#7a6350"/>
-                    <path class="cake-wedge-gap" id="wedgeStroke" d="M 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240" fill="none" stroke="url(#sliceGrad)" stroke-width="6"/>
+                    <!-- the wedge of cake that "goes missing" once the slice is served onto the plate.
+                         Filled with the cake's own crumb gradient (not a flat unrelated brown) so the
+                         gap actually reads as cut cake, with a thin frosting-colored rim where the top
+                         icing would still show at the very edge of the cut. -->
+                    <path class="cake-wedge-gap" id="wedgeFill" d="M 200 195 L 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240 Z" fill="url(#sliceGrad)"/>
+                    <path class="cake-wedge-gap" id="wedgeStroke" d="M 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240" fill="none" stroke="url(#cakeTop)" stroke-width="6"/>
                 </svg>
                 <span class="knife-cursor" id="knifeCursor">🔪</span>
                 </div>
@@ -422,7 +438,14 @@
                         <ellipse cx="50" cy="21" rx="46" ry="16" fill="#fffdfa"/>
                         <ellipse cx="50" cy="21" rx="34" ry="10.5" fill="none" stroke="#e6ddcf" stroke-width="1.5"/>
                     </svg>
-                    <span class="plate-slice" id="plateSlice">🍰</span>
+                    <!-- Served slice: built from the cake's own gradients (purple frosting + golden
+                         crumb) instead of the generic 🍰 emoji, so the piece on the plate actually
+                         matches the color of the cake it came from. -->
+                    <svg class="plate-slice" id="plateSlice" viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 6 L58 50 Q32 58 6 50 Z" fill="url(#sliceGrad)"/>
+                        <path d="M32 6 L46 28 Q32 32 18 28 Z" fill="url(#cakeTop)"/>
+                        <path d="M46 28 L58 50 Q49 54.5 40.5 56.5 Z" fill="url(#cakeSide)" opacity="0.4"/>
+                    </svg>
                 </div>
             </div>
             <div class="mic-hint" id="micHint">🎤 Blow into your mic to blow out the candles, or tap them</div>
@@ -524,13 +547,7 @@
         </div>
         <div class="letter-container" id="letterContainer">
             <h2>A Letter for You Babiee 💌</h2>
-            <div class="letter-content">
-                <p>Every laugh, every chat, and every moment we've shared has been truly special.💫</p>
-                <p>I'm so grateful for the bond we have, and for the positivity you always bring into my life.</p>
-                <p>On your birthday, I just wish for endless happiness, love, and success to come your way.🌸</p>
-                <p>You deserve all the joy in the world—keep shining and spreading your beautiful energy.✨</p>
-                <p>Until We Meet Again 💝</p>
-            </div>
+            <div class="letter-content" id="letterContent"></div>
             <button class="letter-return-btn" onclick="goToSecretScreen()">Again, Happy Birthday Othoy Bury</button>
         </div>
     </div>
@@ -690,6 +707,35 @@
             });
         }
         window.addEventListener('pointermove', (e) => { spawnSparkle(e.clientX, e.clientY); }, { passive: true });
+
+        // A little curl of smoke that rises from a candle right after it's blown out —
+        // 2-3 wisps drifting up and sideways at slightly different speeds, like a real
+        // extinguished flame, rather than the candle just silently going gray.
+        function spawnSmokeAt(x, y) {
+            const puffs = 2 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < puffs; i++) {
+                const delay = i * 90 + Math.random() * 40;
+                setTimeout(() => {
+                    const s = document.createElement('span');
+                    s.className = 'smoke-wisp';
+                    s.textContent = '💨';
+                    s.style.left = x + 'px';
+                    s.style.top = y + 'px';
+                    s.style.opacity = '0.75';
+                    document.body.appendChild(s);
+                    gsap.to(s, {
+                        x: (Math.random() - 0.5) * 30,
+                        y: -34 - Math.random() * 22,
+                        opacity: 0,
+                        scale: 1.4 + Math.random() * 0.5,
+                        rotation: (Math.random() - 0.5) * 50,
+                        duration: 0.9 + Math.random() * 0.4,
+                        ease: 'power1.out',
+                        onComplete: () => s.remove()
+                    });
+                }, delay);
+            }
+        }
 
         // Audio elements
         const countdownAudio = document.getElementById('countdownAudio');
@@ -884,6 +930,71 @@
                 charIndex++;
                 setTimeout(typeGreeting, 100);
             }
+        }
+
+        // Letter content, typed out line by line in a handwriting-style font, like it's being
+        // written in front of you rather than just appearing all at once.
+        const letterLines = [
+            "Every laugh, every chat, and every moment we've shared has been truly special.💫",
+            "I'm so grateful for the bond we have, and for the positivity you always bring into my life.",
+            "On your birthday, I just wish for endless happiness, love, and success to come your way.🌸",
+            "You deserve all the joy in the world—keep shining and spreading your beautiful energy.✨",
+            "Until We Meet Again 💝"
+        ];
+        let letterTyped = false;
+        let letterTypeTimer = null;
+
+        function resetLetterTyping() {
+            letterTyped = false;
+            if (letterTypeTimer) { clearTimeout(letterTypeTimer); letterTypeTimer = null; }
+            const el = document.getElementById('letterContent');
+            if (el) el.innerHTML = '';
+        }
+
+        function typeLetter() {
+            const container = document.getElementById('letterContent');
+            if (!container || letterTyped) return;
+            letterTyped = true;
+            let lineIndex = 0;
+            let charIdx = 0;
+            let currentP = null;
+
+            function typeNextChar() {
+                if (lineIndex >= letterLines.length) return;
+                if (!currentP) {
+                    currentP = document.createElement('p');
+                    // Tiny per-line tilt and vertical drift, like a hand that doesn't write
+                    // perfectly level on every line of a real letter.
+                    const tilt = (Math.random() - 0.5) * 2.4;
+                    const lift = (Math.random() - 0.5) * 6;
+                    currentP.style.transform = `rotate(${tilt.toFixed(2)}deg) translateY(${lift.toFixed(1)}px)`;
+                    const cursor = document.createElement('span');
+                    cursor.className = 'letter-typing-cursor';
+                    currentP.appendChild(document.createTextNode(''));
+                    currentP.appendChild(cursor);
+                    container.appendChild(currentP);
+                }
+                const line = letterLines[lineIndex];
+                if (charIdx < line.length) {
+                    currentP.firstChild.textContent += line.charAt(charIdx);
+                    charIdx++;
+                    // Small natural variance in typing speed, plus a tiny extra pause after
+                    // punctuation, so it reads like a hand actually writing rather than a
+                    // perfectly even machine tick.
+                    const ch = line.charAt(charIdx - 1);
+                    const pause = /[.,!—]/.test(ch) ? 140 : (35 + Math.random() * 45);
+                    letterTypeTimer = setTimeout(typeNextChar, pause);
+                } else {
+                    // Line finished — remove its blinking cursor and move to the next line
+                    const cursor = currentP.querySelector('.letter-typing-cursor');
+                    if (cursor) cursor.remove();
+                    currentP = null;
+                    charIdx = 0;
+                    lineIndex++;
+                    letterTypeTimer = setTimeout(typeNextChar, 260);
+                }
+            }
+            typeNextChar();
         }
 
         // Global click handler for audio
@@ -1268,26 +1379,44 @@
             localStorage.setItem(`blown_${dateKey}`, candlesBlown.toString());
         }
 
+        // Grab the on-screen center of each currently-lit candle before renderCake() wipes and
+        // rebuilds the candle list, so the smoke can rise from exactly where each flame was.
+        function candleCenters(fromIndex, toIndex) {
+            const spans = document.querySelectorAll('#candles .candle');
+            const centers = [];
+            for (let i = fromIndex; i < toIndex; i++) {
+                const el = spans[i];
+                if (!el) continue;
+                const r = el.getBoundingClientRect();
+                centers.push({ x: r.left + r.width / 2, y: r.top + r.height * 0.25 });
+            }
+            return centers;
+        }
+
         window.blowCandle = function(index) {
             if (cakeCut || candlesBlown === totalCandles || index < candlesBlown) return;
+            const centers = candleCenters(index, index + 1);
             candlesBlown = index + 1; 
             saveState(); 
             renderCake(); 
             playBlowPuff();
             vibrate(25);
             confetti({ particleCount:5, spread:30, colors:['#aaaaaa'] });
+            centers.forEach(c => spawnSmokeAt(c.x, c.y));
         };
 
         function blowMultipleCandles(count) {
             if (cakeCut || candlesBlown === totalCandles) return;
             const newBlown = Math.min(candlesBlown + count, totalCandles);
             if (newBlown > candlesBlown) { 
+                const centers = candleCenters(candlesBlown, newBlown);
                 candlesBlown = newBlown; 
                 saveState(); 
                 renderCake(); 
                 playBlowPuff();
                 vibrate(30);
                 confetti({ particleCount:8 * count, spread:40, colors:['#aaaaaa'] }); 
+                centers.forEach(c => spawnSmokeAt(c.x, c.y));
             }
         }
 
@@ -1624,25 +1753,36 @@
             cutAngle = pointerToCakeAngle(e.clientX, e.clientY);
             const lineLength = updateSliceLineAngle(cutAngle);
 
-            // Tilt the blade to match the direction being cut, like an actual hand sawing through cake
+            const dragDist = Math.hypot(e.clientX - cutStartX, e.clientY - cutStartY);
+            const rawProgress = Math.min(dragDist / CUT_DRAG_THRESHOLD, 1);
+            // Cake has resistance: the blade catches a little at first and only "gives way"
+            // as the cut goes deeper, instead of slicing through at a perfectly even rate.
+            const progress = Math.pow(rawProgress, 1.35);
+
+            // Tilt the blade to match the direction being cut, plus a small wobble that fades
+            // out as the cut completes — like a hand sawing through something slightly firm
+            // rather than gliding through empty air.
             const knife = document.getElementById('knifeCursor');
             if (knife) {
                 const tiltDeg = (cutAngle * 180 / Math.PI) - 90;
-                knife.style.setProperty('--knife-rot', tiltDeg + 'deg');
+                const wobble = Math.sin(dragDist / 7) * (7 * (1 - progress));
+                knife.style.setProperty('--knife-rot', (tiltDeg + wobble) + 'deg');
             }
 
-            const dragDist = Math.hypot(e.clientX - cutStartX, e.clientY - cutStartY);
-            const progress = Math.min(dragDist / CUT_DRAG_THRESHOLD, 1);
             const line = document.getElementById('sliceLine');
             const shadow = document.getElementById('sliceShadow');
-            const offset = String(lineLength - lineLength * progress);
+            // A touch of resistance jitter on the cut line itself, so the edge doesn't reveal
+            // in a perfectly smooth sweep — settles down as the slice nears completion.
+            const jitter = (Math.random() - 0.5) * 3 * (1 - progress);
+            const offset = String(Math.max(0, lineLength - lineLength * progress + jitter));
             if (line) line.style.strokeDashoffset = offset;
             if (shadow) shadow.style.strokeDashoffset = offset;
 
-            // A tiny buzz as the knife actually moves through the cake (no sound, just haptics)
-            if (dragDist > 4) vibrate(4);
+            // A tiny buzz as the knife actually moves through the cake (no sound, just haptics),
+            // pulsing a bit more insistently while there's still resistance left in the cut
+            if (dragDist > 4 && Math.random() < 0.35 + 0.4 * (1 - progress)) vibrate(4);
 
-            if (progress >= 1) {
+            if (rawProgress >= 1) {
                 cutDragActive = false;
                 cutCake();
             }
@@ -1775,6 +1915,7 @@
             gsap.set(scene, { clearProps:'opacity' });
             letter.classList.remove('show');
             gsap.set(letter, { opacity:0, y:40 });
+            resetLetterTyping();
         }
 
         window.openEnvelope = function() {
@@ -1800,6 +1941,7 @@
                 letter.classList.add('show');
                 gsap.fromTo(letter, { opacity:0, y:50, scale:0.96 }, { opacity:1, y:0, scale:1, duration:0.7, ease:'power2.out' });
                 gsap.to(scene, { opacity:0, duration:0.5, onComplete:() => scene.classList.add('hidden') });
+                setTimeout(typeLetter, 400);
             }, 900);
         };
 
