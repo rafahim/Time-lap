@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 
-    <meta property="og:title" content="Happy Birthday! 💫">
-    <meta property="og:description" content="A special surprise is waiting for you... tap to open 🎁">
+    <meta property="og:title" content="Something's Coming 💫">
+    <meta property="og:description" content="Tap to open when the time is right ✨">
     <meta property="og:url" content="https://rafahimnn.github.io">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     
-    <title>Wait for countdown 💫</title>
+    <title>Loading... 💫</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Caveat:wght@500;600;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -284,7 +284,7 @@
     </div>
 
     <div class="countdown-screen" id="countdownScreen">
-        <h1 class="countdown-title">Wait for countdown Please...⌛</h1>
+        <h1 class="countdown-title">Something special is unlocking...⌛</h1>
         <div class="countdown-box">
             <div class="count-item"><span class="count-number" id="days">00</span><span class="count-label">Days</span></div>
             <div class="count-item"><span class="count-number" id="hours">00</span><span class="count-label">Hours</span></div>
@@ -607,8 +607,8 @@
         const CONFIG = {
             month: 7,        // March (0=January, 1=February, 2=March)
             day: 18,          // Day
-            hour: 0,         // 12:00 AM (midnight)
-            minute: 00,       // 0 minutes
+            hour: 4,         // 12:00 AM (midnight)
+            minute: 20,       // 0 minutes
             age: 17,
             name: "Othoy.."
         };
@@ -1143,12 +1143,10 @@
             
             const isBirthdayToday = isBirthday(now);
             
-            // Update message
-            const timeSuffix = getTimeSuffix(CONFIG.hour);
-            const displayHour = formatHour(CONFIG.hour);
-            const minuteStr = CONFIG.minute.toString().padStart(2, '0');
+            // Update message — kept generic on purpose so the countdown screen doesn't reveal
+            // this is a birthday surprise before the reveal happens
             document.getElementById('countdownMessage').innerHTML = 
-                `⏰ Birthday at ${CONFIG.day} ${getMonthName(CONFIG.month)} ${displayHour}:${minuteStr} ${timeSuffix}!`;
+                `⏰ Something is coming soon...`;
             
             if (isBirthdayToday) {
                 // It's birthday!
