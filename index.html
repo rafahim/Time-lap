@@ -83,7 +83,8 @@
         .cake-emoji.cake-cut #sliceLine, .cake-emoji.cake-cut #sliceShadow { opacity:0; transition:opacity 0.25s; }
         .plate-wrap { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; position:relative; }
         .plate-svg { width:clamp(40px,11vw,70px); height:auto; filter:drop-shadow(0 8px 14px rgba(0,0,0,0.25)); }
-        .plate-slice { position:absolute; width:clamp(30px,8vw,44px); height:auto; opacity:0; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3)); z-index:6; transform-origin:center; }
+        .plate-slice { position:absolute; width:clamp(30px,8vw,44px); opacity:0; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.3)); z-index:6; transform-origin:center; }
+        .plate-slice-svg { display:block; width:100%; height:auto; }
         .knife-holder { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex-shrink:0; gap:6px; }
         .table-knife { display:inline-block; font-size:clamp(22px,6vw,30px); transform:rotate(-60deg); opacity:0.55; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25)) grayscale(0.3); transition:opacity 0.3s,transform 0.3s,filter 0.3s; cursor:default; user-select:none; }
         .table-knife.ready { opacity:1; filter:drop-shadow(0 0 10px gold) drop-shadow(0 4px 6px rgba(0,0,0,0.3)); cursor:pointer; animation:knifeInvite 1.4s ease-in-out infinite; }
@@ -246,7 +247,7 @@
     </audio>
     
     <audio id="birthdayWish" preload="auto" loop>
-        <source src="https://res.cloudinary.com/dpctt0wao/video/upload/v1773210114/WhatsApp_Audio_2026-03-10_at_11.46.39_PM_cbggem.mp3" type="audio/mpeg">
+        <source src="https://res.cloudinary.com/dpctt0wao/video/upload/v1786820547/ub7xhj7db3ngyig8nntr.mp3" type="audio/mpeg">
     </audio>
 
     <video class="video-bg" autoplay muted loop playsinline>
@@ -294,7 +295,7 @@
     </div>
 
     <div class="greeting-screen" id="greetingScreen">
-        <h1>Happy Birthday Lokkhity❤️🎂💫</h1>
+        <h1>Happy Birthday Othoy Pagli❤️🎂💫</h1>
         <div class="greeting-text" id="greetingText"></div>
         <button class="enter-btn" onclick="goToCakeScreen()">Click to enter your world 💕</button>
     </div>
@@ -440,12 +441,18 @@
                     </svg>
                     <!-- Served slice: built from the cake's own gradients (purple frosting + golden
                          crumb) instead of the generic 🍰 emoji, so the piece on the plate actually
-                         matches the color of the cake it came from. -->
-                    <svg class="plate-slice" id="plateSlice" viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M32 6 L58 50 Q32 58 6 50 Z" fill="url(#sliceGrad)"/>
-                        <path d="M32 6 L46 28 Q32 32 18 28 Z" fill="url(#cakeTop)"/>
-                        <path d="M46 28 L58 50 Q49 54.5 40.5 56.5 Z" fill="url(#cakeSide)" opacity="0.4"/>
-                    </svg>
+                         matches the color of the cake it came from. Wrapped in a plain <span> (rather
+                         than positioning the <svg> itself) because percentage-based CSS transforms
+                         like translate(-50%,-50%) don't resolve consistently on inline SVG root
+                         elements across browsers — that mismatch was why the flying slice could land
+                         off from where it was supposed to instead of on the plate. -->
+                    <span class="plate-slice" id="plateSlice">
+                        <svg class="plate-slice-svg" viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M32 6 L58 50 Q32 58 6 50 Z" fill="url(#sliceGrad)"/>
+                            <path d="M32 6 L46 28 Q32 32 18 28 Z" fill="url(#cakeTop)"/>
+                            <path d="M46 28 L58 50 Q49 54.5 40.5 56.5 Z" fill="url(#cakeSide)" opacity="0.4"/>
+                        </svg>
+                    </span>
                 </div>
             </div>
             <div class="mic-hint" id="micHint">🎤 Blow into your mic to blow out the candles, or tap them</div>
@@ -457,7 +464,7 @@
     </div>
 
     <div class="reasons-screen" id="reasonsScreen">
-        <div class="reasons-header"><h1>Happy Birthday Boujan.. 💖</h1></div>
+        <div class="reasons-header"><h1>Happy Birthday Just Friend.. 💖</h1></div>
         <div class="reasons-container" id="reasonsContainer"></div>
         <div class="reason-counter" id="reasonCounter">Reason 1 of 4</div>
         <button class="reasons-btn" id="reasonsBtn" onclick="handleReasonClick()">Click Here... 💕</button>
@@ -465,45 +472,25 @@
 
     <div class="photo-screen" id="photoScreen">
         <div class="photo-header">
-            <h1>Our Beautiful Moments Together</h1>
-            <p>Every moment spent with you has been magical. Let's cherish these precious memories cuty...</p>
+            <h1>The Beautiful Moments </h1>
+            <p>Every moment spent with you has been magical. Let's cherish these precious memories Othoy...</p>
         </div>
         <div class="photo-container">
-             <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773499479/whatistime_web_1024_qjits5.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773499479/whatistime_web_1024_qjits5.jpg" alt="What is time" class="photo-img">
-                <div class="photo-date">What is time</div>
-                <div class="photo-caption">This day marks the beautiful moment you came into this world🕛</div>
+             <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1786824168/zy6ndwpddbrry4eojcus.png')">
+                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1786824168/zy6ndwpddbrry4eojcus.pngg" alt="What is time" class="photo-img">
+                <div class="photo-date">A Magical Reflection 💖</div>
+                <div class="photo-caption">A reflection of pure grace, elegance, and unmatched beauty. 🌹👑</div>
             </div>
-            <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773476394/1763024498529_wgoq2u.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773476394/1763024498529_wgoq2u.jpg" alt="Her Smile" class="photo-img">
-                <div class="photo-date">Her Smile Says It All</div>
-                <div class="photo-caption">You're truly one of the sweetest girls I know, and I feel lucky to have a wife like you❤️</div>
-            </div>
-            <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773476392/1763027969271_wko2rx.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773476392/1763027969271_wko2rx.jpg" alt="Together Vibes" class="photo-img">
-                <div class="photo-date">Together Vibes</div>
+            <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1786824169/auvpg9bqzbh1g2enuh8z.png')">
+                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1786824169/auvpg9bqzbh1g2enuh8z.png" alt="Her Smile" class="photo-img">
+                <div class="photo-date">Lost in Bengali Lore</div>
                 <div class="photo-caption">May your journey ahead be filled with happiness, success, and endless smiles😊💕</div>
             </div>
-            <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773476392/IMG_20260128_210003_145_ksmapv.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773476392/IMG_20260128_210003_145_ksmapv.jpg" alt="Pretty Soul" class="photo-img">
-                <div class="photo-date">Pretty Soul</div>
-                <div class="photo-caption">Keep being the amazing person you are—you make every moment brighter🌸💖</div>
-            </div>
-             <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773477450/IMG_20251205_200338_884_cbd9qr.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773477450/IMG_20251205_200338_884_cbd9qr.jpg" alt="When she angry" class="photo-img">
-                <div class="photo-date">When she angry😏</div>
-                <div class="photo-caption">When she gets angry and tries to take a photo📸</div>
-            </div>
-             <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773492758/1773492669027_viwqvn.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773492758/1773492669027_viwqvn.jpg" alt="Her Look" class="photo-img">
-                <div class="photo-date">Her Look👑</div>
-                <div class="photo-caption">Her look says everything; it speaks louder than words✨🌸❤️</div>
-            </div>
-             <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773494375/1738394431097_6514771257484507422_lzo7qg.jpg')">
-                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773494375/1738394431097_6514771257484507422_lzo7qg.jpg" alt="1st selfie" class="photo-img">
-                <div class="photo-date">1st selfie</div>
-                <div class="photo-caption">Our first selfie, and it's already perfect✨😊</div>
-            </div>
+            <div class="photo-card" onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1786823873/qj1taxj8jw4hyu1c4wvf.jpg')">
+                <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1786823873/qj1taxj8jw4hyu1c4wvf.jpg" alt="Together Vibes" class="photo-img">
+                <div class="photo-date">Her Smile Says It All</div>
+                <div class="photo-caption">You're truly one of the sweetest girls I know, and I feel lucky to have a friend like you❤️</div>
+            </div>   
         </div>
         <button class="photo-next-btn" onclick="goToVideoScreen()">Again Your Storylane 🎥</button>
     </div>
@@ -513,7 +500,7 @@
         <div class="video-container">
             <div class="video-grid">
                 <div class="video-card">
-                    <h3>Happy Birthday Sweety❤️🎂</h3>
+                    <h3>Happy Birthday Othoy❤️🎂</h3>
                     <div class="video-wrapper">
                         <video controls preload="metadata">
                             <source src="https://res.cloudinary.com/dpctt0wao/video/upload/v1773477829/WhatsApp_Video_2026-03-14_at_2.41.14_PM_n2zc1z.mp4" type="video/mp4">
@@ -521,10 +508,10 @@
                     </div>
                 </div>
                 <div class="video-card">
-                    <h3>When she sings with her beautiful voice🎶</h3>
+                    <h3>When Othoy act like a actor..</h3>
                     <div class="video-wrapper">
                         <video controls preload="metadata">
-                            <source src="https://res.cloudinary.com/dpctt0wao/video/upload/v1773477827/WhatsApp_Video_2026-03-14_at_2.41.15_PM_hcyu15.mp4" type="video/mp4">
+                            <source src="https://res.cloudinary.com/dpctt0wao/video/upload/v1786827683/edcqmem9gdaunokk8uo9.mp4" type="video/mp4">
                         </video>
                     </div>
                 </div>
@@ -546,7 +533,7 @@
             <div class="envelope-hint">Tap the envelope to open it</div>
         </div>
         <div class="letter-container" id="letterContainer">
-            <h2>A Letter for You Babiee 💌</h2>
+            <h2>A Letter for You friend 💌</h2>
             <div class="letter-content" id="letterContent"></div>
             <button class="letter-return-btn" onclick="goToSecretScreen()">Again, Happy Birthday Othoy Bury</button>
         </div>
@@ -554,10 +541,10 @@
 
     <div class="secret-screen" id="secretScreen">
         <div class="secret-container">
-            <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1773163463/WhatsApp_Image_2026-03-10_at_11.18.34_PM_nc8tpd.jpg" 
+            <img src="https://res.cloudinary.com/dpctt0wao/image/upload/v1786828377/cdqkuihl9g0ztwpugoar.png" 
                  alt="Secret Memory" 
                  class="secret-photo" 
-                 onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1773163463/WhatsApp_Image_2026-03-10_at_11.18.34_PM_nc8tpd.jpg')">
+                 onclick="openLightbox('https://res.cloudinary.com/dpctt0wao/image/upload/v1786828377/cdqkuihl9g0ztwpugoar.png')">
             <button class="soulmate-btn" onclick="goToInstagram()">
                 <i class="fab fa-instagram"></i> See Your Friend
             </button>
@@ -936,7 +923,7 @@
         // written in front of you rather than just appearing all at once.
         const letterLines = [
             "Every laugh, every chat, and every moment we've shared has been truly special.💫",
-            "I'm so grateful for the bond we have, and for the positivity you always bring into my life.",
+            "I'm so grateful for the bond we have, and for the positivity.",
             "On your birthday, I just wish for endless happiness, love, and success to come your way.🌸",
             "You deserve all the joy in the world—keep shining and spreading your beautiful energy.✨",
             "Until We Meet Again 💝"
