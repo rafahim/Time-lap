@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
@@ -90,9 +90,12 @@
         .cut-hint { font-size:14px; color:white; text-shadow:1px 1px 3px rgba(0,0,0,0.5); margin:16px 0 6px; opacity:0.75; transition:0.3s; }
         .cut-hint.ready { opacity:1; animation:softPulse 1.5s infinite; font-weight:600; }
         .candles { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; margin:20px 0; min-height:80px; }
-        .candle { cursor:pointer; transition:0.2s; animation:flicker 0.5s infinite alternate; display:inline-block; font-size:clamp(30px,8vw,42px); filter:drop-shadow(0 0 8px gold); }
+        .candle { cursor:pointer; transition:0.2s; animation:flicker var(--flicker-dur,0.5s) infinite alternate, candleSway var(--sway-dur,2.6s) ease-in-out infinite; display:inline-block; font-size:clamp(30px,8vw,42px); filter:drop-shadow(0 0 8px gold); transform-origin:50% 90%; }
         .candle.blown { opacity:0.2; filter:grayscale(1); pointer-events:none; animation:none; }
         @keyframes flicker { from{ opacity:1; transform:scale(1); } to{ opacity:0.8; transform:scale(1.1); } }
+        /* Gives each flame a slightly different, wind-like sway instead of every candle moving in lockstep */
+        @keyframes candleSway { 0%,100%{ rotate:var(--sway-neg,-3deg); } 50%{ rotate:var(--sway-pos,3deg); } }
+        .sparkle-trail { position:fixed; top:0; left:0; pointer-events:none; z-index:9998; font-size:14px; will-change:transform,opacity; }
         .cake-status { font-size:clamp(16px,4vw,20px); color:white; margin:20px 0; padding:12px; border-radius:40px; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); text-shadow:1px 1px 4px rgba(0,0,0,0.5); }
         .mic-hint { font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:12px; text-shadow:1px 1px 3px rgba(0,0,0,0.5); padding:8px 14px; border-radius:20px; transition:0.3s; display:inline-block; }
         .mic-hint.listening { color:#fff; background:rgba(255,105,180,0.35); animation:softPulse 1s infinite; font-weight:600; }
@@ -153,7 +156,21 @@
         .video-next-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(255,105,180,0.6); }
         .letter-screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg,#fdfbfb 0%,#ebedee 100%); z-index:500; padding:20px; box-sizing:border-box; overflow-y:auto; }
         .letter-screen.show { display:flex; }
-        .letter-container { width:100%; max-width:600px; box-sizing:border-box; background:rgba(255,255,255,0.9); padding:clamp(1.25rem,5vw,2rem); border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; margin:auto; }
+        .letter-container { width:100%; max-width:600px; box-sizing:border-box; background:rgba(255,255,255,0.9); padding:clamp(1.25rem,5vw,2rem); border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; margin:auto; display:none; }
+        .letter-container.show { display:block; }
+        /* Envelope: opens with a broken wax seal + unfolding flap before the letter slides out, like a real envelope */
+        .envelope-scene { display:flex; flex-direction:column; align-items:center; gap:16px; margin:auto; }
+        .envelope { position:relative; width:min(320px,82vw); aspect-ratio:3/2; cursor:pointer; perspective:900px; filter:drop-shadow(0 15px 25px rgba(0,0,0,0.25)); }
+        .envelope-back { position:absolute; inset:0; background:linear-gradient(135deg,#fff6ec,#f7e6d4); border-radius:8px; }
+        .envelope-peek { position:absolute; left:50%; top:6%; width:70%; height:60%; transform:translateX(-50%); background:linear-gradient(135deg,#fffdf8,#fdf0e8); border-radius:4px; box-shadow:0 4px 10px rgba(0,0,0,0.12); display:flex; align-items:center; justify-content:center; font-size:2rem; opacity:0; transition:transform 0.6s ease, opacity 0.6s ease; z-index:1; }
+        .envelope-front { position:absolute; left:0; right:0; bottom:0; height:62%; background:linear-gradient(135deg,#ffd7e5,#ffc2d6); clip-path:polygon(0 0,50% 38%,100% 0,100% 100%,0 100%); border-radius:0 0 8px 8px; z-index:2; }
+        .envelope-flap { position:absolute; left:0; right:0; top:0; height:62%; background:linear-gradient(135deg,#ffb6cf,#ff9ec2); clip-path:polygon(0 0,100% 0,50% 84%); transform-origin:top center; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(.5,-0.2,.5,1.2); z-index:3; display:flex; align-items:flex-start; justify-content:center; }
+        .envelope-flap.open { transform:rotateX(-172deg); z-index:0; }
+        .envelope.opened .envelope-peek { opacity:1; transform:translate(-50%,-38%); }
+        .wax-seal { margin-top:18%; width:clamp(30px,9vw,42px); height:clamp(30px,9vw,42px); border-radius:50%; background:radial-gradient(circle at 35% 30%,#ff7aa2,#d4145a); display:flex; align-items:center; justify-content:center; font-size:1.1rem; box-shadow:0 3px 8px rgba(0,0,0,0.3); transition:transform 0.35s ease, opacity 0.35s ease; }
+        .wax-seal.breaking { transform:scale(1.4) rotate(20deg); opacity:0; }
+        .envelope-hint { font-size:14px; color:#8a6b74; text-shadow:1px 1px 2px rgba(255,255,255,0.6); opacity:0.85; animation:softPulse 1.8s infinite; }
+        .envelope-scene.hidden { display:none; }
         .letter-container h2 { font-family:'Dancing Script',cursive; font-size:clamp(1.8rem,7vw,2.5rem); color:#b0306e; margin-bottom:1rem; overflow-wrap:break-word; }
         .letter-content { font-size:clamp(1rem,4vw,1.2rem); line-height:1.8; color:#2c3e50; font-weight:500; white-space:pre-line; overflow-wrap:break-word; word-break:break-word; }
         .letter-return-btn { margin-top:20px; padding:clamp(10px,3vw,12px) clamp(18px,6vw,30px); background:linear-gradient(45deg,#ff69b4,#ff99cc); border:none; border-radius:50px; color:white; font-size:clamp(0.95rem,3.6vw,1.2rem); cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(255,105,180,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; max-width:100%; white-space:normal; line-height:1.3; }
@@ -167,11 +184,16 @@
         .soulmate-btn { margin-top:clamp(16px,4vw,30px); padding:clamp(10px,3vw,12px) clamp(20px,6vw,30px); background:linear-gradient(45deg,#9b6dff,#ff6dc7); border:none; border-radius:50px; color:white; font-size:clamp(1rem,3.6vw,1.2rem); cursor:pointer; font-weight:bold; box-shadow:0 5px 15px rgba(155,109,255,0.4); transition:0.3s; border:2px solid white; display:inline-block; text-decoration:none; animation:btnPop 0.5s ease-out 0.3s both; max-width:100%; white-space:normal; }
         @keyframes btnPop { 0%{ opacity:0; transform:scale(0.8); } 100%{ opacity:1; transform:scale(1); } }
         .soulmate-btn:hover { transform:scale(1.1); box-shadow:0 8px 25px rgba(155,109,255,0.6); }
-        .lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10001; justify-content:center; align-items:center; padding:20px; }
+        .lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10001; justify-content:center; align-items:center; padding:20px; perspective:1200px; touch-action:pan-y; }
         .lightbox.show { display:flex; }
-        .lightbox img { max-width:90%; max-height:90%; border-radius:10px; border:3px solid white; box-shadow:0 0 50px rgba(255,255,255,0.3); }
+        .lightbox img { max-width:90%; max-height:90%; border-radius:10px; border:3px solid white; box-shadow:0 0 50px rgba(255,255,255,0.3); transform-style:preserve-3d; touch-action:none; user-select:none; -webkit-user-drag:none; }
         .lightbox .close { position:absolute; top:20px; right:30px; font-size:40px; color:white; cursor:pointer; transition:0.3s; }
         .lightbox .close:hover { transform:scale(1.2); color:#ff69b4; }
+        .lightbox-nav { position:absolute; top:50%; transform:translateY(-50%); font-size:2.5rem; color:white; opacity:0.75; cursor:pointer; padding:10px 16px; user-select:none; transition:opacity 0.2s, transform 0.2s; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
+        .lightbox-nav:hover { opacity:1; transform:translateY(-50%) scale(1.15); }
+        .lightbox-nav.prev { left:6px; }
+        .lightbox-nav.next { right:6px; }
+        .lightbox-nav.hidden { display:none; }
         .contact-page { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; display:none; justify-content:center; align-items:center; padding:15px; overflow-y:auto; }
         .contact-page.show { display:flex; }
         .contact-container { background:linear-gradient(135deg,#667eea,#764ba2); padding:30px 20px; border-radius:30px; border:3px solid gold; max-width:450px; width:100%; box-shadow:0 20px 40px rgba(0,0,0,0.5); backdrop-filter:blur(8px); }
@@ -242,7 +264,9 @@
 
     <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
         <span class="close" onclick="closeLightbox(event)">&times;</span>
+        <span class="lightbox-nav prev" id="lightboxPrev" onclick="event.stopPropagation(); navigatePhoto(-1)">&#8249;</span>
         <img src="" id="lightboxImg" alt="Lightbox">
+        <span class="lightbox-nav next" id="lightboxNext" onclick="event.stopPropagation(); navigatePhoto(1)">&#8250;</span>
     </div>
 
     <div class="countdown-screen" id="countdownScreen">
@@ -266,13 +290,13 @@
         <div class="cake-container" style="position:relative;">
             <div class="wish-prompt" id="wishPrompt">
                 <div class="wish-prompt-emoji">🌟</div>
-                <div class="wish-prompt-text">চোখ বন্ধ করে একটা wish করো...</div>
-                <div class="wish-prompt-sub">তারপর মোমবাতিতে ফুঁ দাও 🕯️</div>
+                <div class="wish-prompt-text">Close your eyes and make a wish...</div>
+                <div class="wish-prompt-sub">Then blow out the candles 🕯️</div>
             </div>
             <div class="cake-stage" id="cakeStage">
                 <div class="knife-holder">
                     <span class="table-knife" id="tableKnife" onclick="pickUpKnife()" role="button" aria-label="Pick up knife">🔪</span>
-                    <span class="knife-holder-label" id="knifeHolderLabel">ছুরিতে ট্যাপ করো</span>
+                    <span class="knife-holder-label" id="knifeHolderLabel">Tap the knife</span>
                 </div>
                 <div class="cake-emoji" id="cakeEmoji">
                 <svg class="cake-svg" id="cakeSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -380,13 +404,15 @@
                     <path d="M266 169 c-4 -6 -14 -2 -8 6 c3 4 8 4 8 4 s5 0 8 -4 c6 -8 -4 -12 -8 -6 z" fill="#fdf8f0" opacity="0.9"/>
                     <text x="270" y="203" font-family="'Dancing Script', cursive" font-weight="700" font-size="25" fill="#fdf8f0" text-anchor="middle" transform="rotate(-2 270 203)">Othoy</text>
 
-                    <!-- cake cross-section revealed while dragging the knife, like a real slice opening up -->
+                    <!-- cake cross-section revealed while dragging the knife, like a real slice opening up.
+                         Endpoints and the wedge path below are rewritten live by JS to follow wherever
+                         the user actually drags the knife, so the cut can land anywhere, at any angle. -->
                     <line id="sliceShadow" x1="45" y1="199" x2="355" y2="199" stroke="#5b4636" stroke-width="9" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.35"/>
                     <line id="sliceLine" x1="45" y1="195" x2="355" y2="195" stroke="url(#sliceGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="330" stroke-dashoffset="330" opacity="0.97"/>
 
-                    <!-- a wedge of cake that "goes missing" once the slice is served onto the plate -->
-                    <path class="cake-wedge-gap" d="M 200 195 L 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240 Z" fill="#7a6350"/>
-                    <path class="cake-wedge-gap" d="M 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240" fill="none" stroke="url(#sliceGrad)" stroke-width="6"/>
+                    <!-- the wedge of cake that "goes missing" once the slice is served onto the plate -->
+                    <path class="cake-wedge-gap" id="wedgeFill" d="M 200 195 L 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240 Z" fill="#7a6350"/>
+                    <path class="cake-wedge-gap" id="wedgeStroke" d="M 300 150 A 175 160 0 0 1 340 195 A 175 160 0 0 1 300 240" fill="none" stroke="url(#sliceGrad)" stroke-width="6"/>
                 </svg>
                 <span class="knife-cursor" id="knifeCursor">🔪</span>
                 </div>
@@ -399,10 +425,10 @@
                     <span class="plate-slice" id="plateSlice">🍰</span>
                 </div>
             </div>
-            <div class="mic-hint" id="micHint">🎤 তোমার মাইক দিয়ে ফুঁ দিয়ে মোমবাতি নিভাও, অথবা ট্যাপ করো</div>
+            <div class="mic-hint" id="micHint">🎤 Blow into your mic to blow out the candles, or tap them</div>
             <div class="candles" id="candles"></div>
             <div class="cake-status" id="cakeStatus"></div>
-            <div class="cut-hint" id="cutHint">🔪 কেকের উপর মাউস বা আঙুল দিয়ে ধরে টেনে কাটো</div>
+            <div class="cut-hint" id="cutHint">🔪 Press and drag anywhere on the cake — cut it your way</div>
             <button class="cake-next-btn" id="cakeNextBtn" onclick="goToReasonsScreen()" style="display:none;">Enter your storyline 💫</button>
         </div>
     </div>
@@ -485,7 +511,18 @@
     </div>
 
     <div class="letter-screen" id="letterScreen">
-        <div class="letter-container">
+        <div class="envelope-scene" id="envelopeScene">
+            <div class="envelope" id="envelopeEl" onclick="openEnvelope()" role="button" aria-label="Open the letter">
+                <div class="envelope-back"></div>
+                <div class="envelope-peek">💌</div>
+                <div class="envelope-front"></div>
+                <div class="envelope-flap" id="envelopeFlap">
+                    <div class="wax-seal" id="waxSeal">💖</div>
+                </div>
+            </div>
+            <div class="envelope-hint">Tap the envelope to open it</div>
+        </div>
+        <div class="letter-container" id="letterContainer">
             <h2>A Letter for You Babiee 💌</h2>
             <div class="letter-content">
                 <p>Every laugh, every chat, and every moment we've shared has been truly special.💫</p>
@@ -626,6 +663,33 @@
                 gsap.to(cursor, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.2 }); 
             });
         }
+
+        // Light sparkle trail that follows the cursor/finger around, for a bit of magic in the air
+        const sparkleChars = ['✨','⭐','💫'];
+        let lastSparkleAt = 0;
+        function spawnSparkle(x, y) {
+            const now = Date.now();
+            if (now - lastSparkleAt < 70) return; // throttle so it's a light trail, not a smear
+            lastSparkleAt = now;
+            const s = document.createElement('span');
+            s.className = 'sparkle-trail';
+            s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+            s.style.left = x + 'px';
+            s.style.top = y + 'px';
+            s.style.opacity = '0.9';
+            document.body.appendChild(s);
+            gsap.to(s, {
+                x: (Math.random() - 0.5) * 24,
+                y: -18 - Math.random() * 14,
+                opacity: 0,
+                scale: 0.4,
+                rotation: (Math.random() - 0.5) * 60,
+                duration: 0.7 + Math.random() * 0.3,
+                ease: 'power1.out',
+                onComplete: () => s.remove()
+            });
+        }
+        window.addEventListener('pointermove', (e) => { spawnSparkle(e.clientX, e.clientY); }, { passive: true });
 
         // Audio elements
         const countdownAudio = document.getElementById('countdownAudio');
@@ -869,17 +933,81 @@
             return date.getMonth() === CONFIG.month && date.getDate() === CONFIG.day;
         }
 
-        // Lightbox functions
+        // Lightbox functions — swipeable like a real photo album: drag/swipe or use the arrows
+        // to flip between the pictures instead of only ever seeing the one you tapped.
+        const photoAlbum = Array.from(document.querySelectorAll('.photo-card img')).map(img => img.getAttribute('src'));
+        let lightboxIndex = -1;
+
+        function updateLightboxNavVisibility() {
+            const show = photoAlbum.length > 1 && lightboxIndex !== -1;
+            const prev = document.getElementById('lightboxPrev');
+            const next = document.getElementById('lightboxNext');
+            if (prev) prev.classList.toggle('hidden', !show);
+            if (next) next.classList.toggle('hidden', !show);
+        }
+
         window.openLightbox = function(src) { 
+            lightboxIndex = photoAlbum.indexOf(src);
             document.getElementById('lightboxImg').src = src; 
             document.getElementById('lightbox').classList.add('show'); 
+            updateLightboxNavVisibility();
         };
         
         window.closeLightbox = function(event) { 
             if (event.target === document.getElementById('lightbox') || event.target.classList.contains('close')) {
                 document.getElementById('lightbox').classList.remove('show'); 
+                lightboxIndex = -1;
             }
         };
+
+        // Flip to the next/previous photo in the album, like turning a page — direction is +1 (next) or -1 (prev)
+        window.navigatePhoto = function(direction) {
+            if (lightboxIndex === -1 || photoAlbum.length < 2) return;
+            const img = document.getElementById('lightboxImg');
+            const nextIndex = (lightboxIndex + direction + photoAlbum.length) % photoAlbum.length;
+            gsap.to(img, {
+                rotationY: direction * -85,
+                opacity: 0,
+                duration: 0.22,
+                ease: 'power1.in',
+                onComplete: () => {
+                    lightboxIndex = nextIndex;
+                    img.src = photoAlbum[lightboxIndex];
+                    gsap.fromTo(img, { rotationY: direction * 85, opacity: 0 }, { rotationY: 0, opacity: 1, duration: 0.3, ease: 'power1.out' });
+                }
+            });
+            vibrate(10);
+        };
+
+        // Drag/swipe the photo left or right to flip pages, the way you'd flip through a real album
+        (function setupLightboxSwipe() {
+            const lightboxEl = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            if (!lightboxEl || !img) return;
+            let dragStartX = null;
+            let dragging = false;
+
+            img.addEventListener('pointerdown', (e) => {
+                dragStartX = e.clientX;
+                dragging = true;
+                try { img.setPointerCapture(e.pointerId); } catch(err) {}
+            });
+            img.addEventListener('pointermove', (e) => {
+                if (!dragging || dragStartX === null) return;
+                const dx = e.clientX - dragStartX;
+                gsap.set(img, { x: dx * 0.4, rotationY: dx * 0.06 });
+            });
+            function endDrag(e) {
+                if (!dragging || dragStartX === null) return;
+                dragging = false;
+                const dx = e.clientX - dragStartX;
+                dragStartX = null;
+                gsap.to(img, { x: 0, rotationY: 0, duration: 0.25 });
+                if (Math.abs(dx) > 60) navigatePhoto(dx < 0 ? 1 : -1);
+            }
+            img.addEventListener('pointerup', endDrag);
+            img.addEventListener('pointercancel', endDrag);
+        })();
 
         // Auto reset
         function scheduleAutoReset() {
@@ -989,18 +1117,23 @@
         }
 
         // Navigation functions
+        // Subtle parallax/depth on every screen change: the outgoing screen eases back and fades,
+        // the incoming one drifts up into place from slightly below and slightly smaller.
+        function parallaxOut(selector, onDone) {
+            gsap.to(selector, { opacity:0, y:-26, scale:0.985, duration:0.45, ease:'power1.in', onComplete:onDone });
+        }
+        function parallaxIn(selector) {
+            gsap.fromTo(selector, { opacity:0, y:30, scale:0.985 }, { opacity:1, y:0, scale:1, duration:0.6, ease:'power2.out' });
+        }
+
         window.goToCakeScreen = function() {
-            gsap.to('#greetingScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('greetingScreen').classList.remove('show');
-                    document.getElementById('cakeScreen').classList.add('show');
-                    updateHistory('cake');
-                    loadCakeState();
-                    gsap.fromTo('#cakeScreen', {opacity:0}, {opacity:1, duration:0.5});
-                    showWishMoment();
-                }
+            parallaxOut('#greetingScreen', () => {
+                document.getElementById('greetingScreen').classList.remove('show');
+                document.getElementById('cakeScreen').classList.add('show');
+                updateHistory('cake');
+                loadCakeState();
+                parallaxIn('#cakeScreen');
+                showWishMoment();
             });
         };
 
@@ -1047,6 +1180,7 @@
             cakeCut = localStorage.getItem(`cut_${dateKey}`) === 'true';
             candlesBlown = parseInt(localStorage.getItem(`blown_${dateKey}`) || '0');
             knifePickedUp = false;
+            cutAngle = parseFloat(localStorage.getItem(`cutAngle_${dateKey}`) || '0');
             
             // If birthday is over, reset for next year
             if (!isBirthday(today)) {
@@ -1054,6 +1188,7 @@
                 candlesBlown = 0;
             }
             
+            if (cakeCut) applyWedgeAtAngle(cutAngle);
             renderCake();
         }
 
@@ -1101,12 +1236,19 @@
             let candlesHtml = '';
             for (let i = 0; i < totalCandles; i++) {
                 const blown = i < candlesBlown ? 'blown' : '';
-                candlesHtml += `<span class="candle ${blown}" onclick="blowCandle(${i})">🕯️</span>`;
+                // Randomize each flame's timing/tilt a little so they flicker like they're in a real breeze,
+                // not all perfectly in sync.
+                const flickerDur = (0.35 + Math.random() * 0.35).toFixed(2);
+                const swayDur = (1.8 + Math.random() * 2.2).toFixed(2);
+                const swayNeg = -(2 + Math.random() * 5).toFixed(1);
+                const swayPos = (2 + Math.random() * 5).toFixed(1);
+                const style = `--flicker-dur:${flickerDur}s;--sway-dur:${swayDur}s;--sway-neg:${swayNeg}deg;--sway-pos:${swayPos}deg;animation-delay:-${(Math.random()*2).toFixed(2)}s;`;
+                candlesHtml += `<span class="candle ${blown}" style="${style}" onclick="blowCandle(${i})">🕯️</span>`;
             }
             candlesDiv.innerHTML = candlesHtml;
             
             if (candlesBlown === totalCandles) { 
-                statusDiv.textContent = knifePickedUp ? '🔪 এবার কেকের উপর ধরে বাঁ থেকে ডানে টানো' : '🎉 All candles blown! ছুরিতে ট্যাপ করো'; 
+                statusDiv.textContent = knifePickedUp ? '🔪 Now hold and drag across the cake to slice it' : '🎉 All candles blown! Tap the knife'; 
                 cutHint.classList.add('ready');
                 micHint.style.display = 'none';
                 if (tableKnife && !knifePickedUp) tableKnife.classList.add('ready');
@@ -1156,7 +1298,7 @@
             if (cakeCut || candlesBlown === totalCandles) return;
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 const hint = document.getElementById('micHint');
-                hint.textContent = '⚠️ এই ডিভাইসে মাইক্রোফোন সাপোর্ট নেই — ট্যাপ করে নিভাও';
+                hint.textContent = "⚠️ Microphone isn't supported on this device — tap to blow out the candles";
                 hint.classList.add('denied');
                 return;
             }
@@ -1176,7 +1318,7 @@
                     const micHint = document.getElementById('micHint');
                     micHint.classList.add('listening');
                     micHint.classList.remove('denied');
-                    micHint.textContent = '🎤 এখন ফুঁ দাও...';
+                    micHint.textContent = '🎤 Now blow...';
                     
                     if (blowInterval) clearInterval(blowInterval);
                     blowInterval = setInterval(() => {
@@ -1196,7 +1338,7 @@
                 .catch(() => {
                     micDenied = true;
                     const hint = document.getElementById('micHint');
-                    hint.textContent = '⚠️ মাইক পারমিশন দেওয়া হয়নি — শুধু ট্যাপ করে মোমবাতি নিভাও';
+                    hint.textContent = "⚠️ Mic permission wasn't granted — just tap to blow out the candles";
                     hint.classList.add('denied');
                 });
         }
@@ -1219,7 +1361,7 @@
             if (micHint) {
                 micHint.classList.remove('listening');
                 if (candlesBlown < totalCandles && !cakeCut && !micDenied) {
-                    micHint.textContent = '🎤 তোমার মাইক দিয়ে ফুঁ দিয়ে মোমবাতি নিভাও, অথবা ট্যাপ করো';
+                    micHint.textContent = '🎤 Blow into your mic to blow out the candles, or tap them';
                 }
             }
         }
@@ -1230,7 +1372,11 @@
             const dateKey = getDateKey(today);
             cakeCut = true;
             localStorage.setItem(`cut_${dateKey}`, 'true');
+            localStorage.setItem(`cutAngle_${dateKey}`, String(cutAngle));
             stopMicrophone();
+
+            // Lock the served wedge to wherever the user actually dragged the knife
+            applyWedgeAtAngle(cutAngle);
 
             // Physical, real-feeling payoff (no sound here — just the jiggle + haptics)
             vibrate([15, 40, 60]);
@@ -1284,9 +1430,10 @@
             const cakeRect = cakeZone.getBoundingClientRect();
             const plateRect = plateWrap.getBoundingClientRect();
 
-            // Start roughly where the wedge sits on the cake (right-of-center)
-            const startX = cakeRect.left + cakeRect.width * 0.78;
-            const startY = cakeRect.top + cakeRect.height * 0.5;
+            // Start exactly where the wedge sits on the cake — wherever the user actually cut it
+            const wedgePoint = angleToCakePoint(cutAngle, 0.72);
+            const startX = cakeRect.left + (wedgePoint.x / 400) * cakeRect.width;
+            const startY = cakeRect.top + (wedgePoint.y / 400) * cakeRect.height;
             // Land centered on the plate
             const endX = plateRect.left + plateRect.width / 2;
             const endY = plateRect.top + plateRect.height * 0.4;
@@ -1317,18 +1464,69 @@
                 .to(slice, { scale: 0.95, duration: 0.12, yoyo: true, repeat: 1 });
         }
 
-        // Drag-to-cut: hold the knife and swipe across the cake instead of tapping a button
-        const CUT_DRAG_THRESHOLD = 130; // px of horizontal drag needed to complete the cut
-        const SLICE_LINE_LENGTH = 330;
+        // Drag-to-cut: hold the knife and swipe across the cake instead of tapping a button.
+        // The cut is fully freeform — it follows wherever the user actually drags, in whatever
+        // direction they choose, and the slice that gets served is the one they carved out.
+        const CUT_DRAG_THRESHOLD = 110; // px of drag needed to complete the cut (any direction)
+        const CAKE_CX = 200, CAKE_CY = 195, CAKE_RX = 175, CAKE_RY = 160; // matches the cake ellipse in the SVG
+        const WEDGE_HALF_ANGLE = 26 * Math.PI / 180; // how wide the served slice is, either side of the cut
         let cutDragActive = false;
         let cutStartX = 0;
-        let cutLastX = 0;
+        let cutStartY = 0;
+        let cutAngle = 0; // radians — direction of the cut the user is currently dragging
+        let lastLineLength = 330;
 
-        function resetSliceLine() {
+        // Point on the cake's rim in the direction of `angle`, pulled in slightly (scale<1) so the
+        // cut line reads as sitting on the cake surface rather than exactly on its outer edge.
+        function angleToCakePoint(angle, scale) {
+            return {
+                x: CAKE_CX + Math.cos(angle) * CAKE_RX * scale,
+                y: CAKE_CY + Math.sin(angle) * CAKE_RY * scale
+            };
+        }
+
+        // Redraw the cut line so it runs straight through the cake along whatever angle the user
+        // is currently dragging, instead of always being the fixed horizontal line it used to be.
+        function updateSliceLineAngle(angle) {
+            const p1 = angleToCakePoint(angle + Math.PI, 0.89);
+            const p2 = angleToCakePoint(angle, 0.89);
+            const length = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+            lastLineLength = length;
             const line = document.getElementById('sliceLine');
             const shadow = document.getElementById('sliceShadow');
-            if (line) line.style.strokeDashoffset = String(SLICE_LINE_LENGTH);
-            if (shadow) shadow.style.strokeDashoffset = String(SLICE_LINE_LENGTH);
+            [line, shadow].forEach(el => {
+                if (!el) return;
+                el.setAttribute('x1', p1.x); el.setAttribute('y1', p1.y);
+                el.setAttribute('x2', p2.x); el.setAttribute('y2', p2.y);
+                el.style.strokeDasharray = String(length);
+            });
+            return length;
+        }
+
+        // Build the pie-slice path for whatever portion of the cake the user chose to cut,
+        // centered on the angle they dragged toward.
+        function buildWedgePaths(angle) {
+            const p1 = angleToCakePoint(angle - WEDGE_HALF_ANGLE, 1);
+            const p3 = angleToCakePoint(angle + WEDGE_HALF_ANGLE, 1);
+            const fill = `M ${CAKE_CX} ${CAKE_CY} L ${p1.x} ${p1.y} A ${CAKE_RX} ${CAKE_RY} 0 0 1 ${p3.x} ${p3.y} Z`;
+            const stroke = `M ${p1.x} ${p1.y} A ${CAKE_RX} ${CAKE_RY} 0 0 1 ${p3.x} ${p3.y}`;
+            return { fill, stroke };
+        }
+
+        function applyWedgeAtAngle(angle) {
+            const paths = buildWedgePaths(angle);
+            const fillEl = document.getElementById('wedgeFill');
+            const strokeEl = document.getElementById('wedgeStroke');
+            if (fillEl) fillEl.setAttribute('d', paths.fill);
+            if (strokeEl) strokeEl.setAttribute('d', paths.stroke);
+        }
+
+        function resetSliceLine() {
+            const length = updateSliceLineAngle(0);
+            const line = document.getElementById('sliceLine');
+            const shadow = document.getElementById('sliceShadow');
+            if (line) line.style.strokeDashoffset = String(length);
+            if (shadow) shadow.style.strokeDashoffset = String(length);
         }
 
         function canDragCut() {
@@ -1342,6 +1540,20 @@
             const rect = zone.getBoundingClientRect();
             knife.style.left = (clientX - rect.left) + 'px';
             knife.style.top = (clientY - rect.top) + 'px';
+        }
+
+        // Angle (in the cake's own coordinate space) from the cake center out to wherever the
+        // pointer currently is — this is what lets the user cut in literally any direction.
+        function pointerToCakeAngle(clientX, clientY) {
+            const zone = document.getElementById('cakeEmoji');
+            const rect = zone.getBoundingClientRect();
+            const scaleX = 400 / rect.width;
+            const scaleY = 400 / rect.height;
+            const svgX = (clientX - rect.left) * scaleX;
+            const svgY = (clientY - rect.top) * scaleY;
+            const nx = (svgX - CAKE_CX) / CAKE_RX;
+            const ny = (svgY - CAKE_CY) / CAKE_RY;
+            return Math.atan2(ny, nx);
         }
 
         // Real life: you pick the knife up off the table first, THEN you cut.
@@ -1378,7 +1590,7 @@
 
             const statusDiv = document.getElementById('cakeStatus');
             const cutHint = document.getElementById('cutHint');
-            if (statusDiv) statusDiv.textContent = '🔪 এবার কেকের উপর ধরে বাঁ থেকে ডানে টানো';
+            if (statusDiv) statusDiv.textContent = '🔪 Now hold and drag across the cake to slice it';
             if (cutHint) cutHint.classList.add('ready');
         };
 
@@ -1394,7 +1606,10 @@
             if (!knifePickedUp) pickUpKnife();
             cutDragActive = true;
             cutStartX = e.clientX;
-            cutLastX = e.clientX;
+            cutStartY = e.clientY;
+            // Wherever the user first presses down sets the direction of the cut — free choice, not fixed
+            cutAngle = pointerToCakeAngle(e.clientX, e.clientY);
+            updateSliceLineAngle(cutAngle);
             document.getElementById('knifeCursor').classList.add('active');
             updateKnifePosition(e.clientX, e.clientY);
             if (zone.setPointerCapture) { try { zone.setPointerCapture(e.pointerId); } catch(err) {} }
@@ -1404,20 +1619,23 @@
             if (!cutDragActive) return;
             updateKnifePosition(e.clientX, e.clientY);
 
-            // Tilt the blade with the direction of the stroke, like an actual hand sawing through cake
-            const stepDelta = e.clientX - cutLastX;
-            cutLastX = e.clientX;
+            // The cut keeps following the pointer — drag toward any part of the cake and that's
+            // the direction (and portion) that gets sliced.
+            cutAngle = pointerToCakeAngle(e.clientX, e.clientY);
+            const lineLength = updateSliceLineAngle(cutAngle);
+
+            // Tilt the blade to match the direction being cut, like an actual hand sawing through cake
             const knife = document.getElementById('knifeCursor');
-            if (knife && Math.abs(stepDelta) > 0.5) {
-                const tilt = Math.max(-55, Math.min(-5, -30 - stepDelta * 2));
-                knife.style.setProperty('--knife-rot', tilt + 'deg');
+            if (knife) {
+                const tiltDeg = (cutAngle * 180 / Math.PI) - 90;
+                knife.style.setProperty('--knife-rot', tiltDeg + 'deg');
             }
 
-            const dragDist = Math.abs(e.clientX - cutStartX);
+            const dragDist = Math.hypot(e.clientX - cutStartX, e.clientY - cutStartY);
             const progress = Math.min(dragDist / CUT_DRAG_THRESHOLD, 1);
             const line = document.getElementById('sliceLine');
             const shadow = document.getElementById('sliceShadow');
-            const offset = String(SLICE_LINE_LENGTH - SLICE_LINE_LENGTH * progress);
+            const offset = String(lineLength - lineLength * progress);
             if (line) line.style.strokeDashoffset = offset;
             if (shadow) shadow.style.strokeDashoffset = offset;
 
@@ -1505,68 +1723,92 @@
             document.getElementById('reasonsBtn').classList.remove('story-mode');
             document.getElementById('reasonsContainer').innerHTML = '';
             
-            gsap.to('#cakeScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('cakeScreen').classList.remove('show');
-                    document.getElementById('reasonsScreen').classList.add('show');
-                    updateHistory('reasons');
-                    gsap.fromTo('#reasonsScreen', {opacity:0}, {opacity:1, duration:0.5});
-                    displayReason();
-                }
+            parallaxOut('#cakeScreen', () => {
+                document.getElementById('cakeScreen').classList.remove('show');
+                document.getElementById('reasonsScreen').classList.add('show');
+                updateHistory('reasons');
+                parallaxIn('#reasonsScreen');
+                displayReason();
             });
         };
 
         window.goToPhotoScreen = function() {
-            gsap.to('#reasonsScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('reasonsScreen').classList.remove('show');
-                    document.getElementById('photoScreen').classList.add('show');
-                    updateHistory('photo');
-                    gsap.fromTo('#photoScreen', {opacity:0}, {opacity:1, duration:0.5});
-                }
+            parallaxOut('#reasonsScreen', () => {
+                document.getElementById('reasonsScreen').classList.remove('show');
+                document.getElementById('photoScreen').classList.add('show');
+                updateHistory('photo');
+                parallaxIn('#photoScreen');
             });
         };
 
         window.goToVideoScreen = function() {
-            gsap.to('#photoScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('photoScreen').classList.remove('show');
-                    document.getElementById('videoScreen').classList.add('show');
-                    updateHistory('video');
-                    gsap.fromTo('#videoScreen', {opacity:0}, {opacity:1, duration:0.5});
-                }
+            parallaxOut('#photoScreen', () => {
+                document.getElementById('photoScreen').classList.remove('show');
+                document.getElementById('videoScreen').classList.add('show');
+                updateHistory('video');
+                parallaxIn('#videoScreen');
             });
         };
 
         window.goToLetterScreen = function() {
-            gsap.to('#videoScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('videoScreen').classList.remove('show');
-                    document.getElementById('letterScreen').classList.add('show');
-                    updateHistory('letter');
-                    gsap.fromTo('#letterScreen', {opacity:0}, {opacity:1, duration:0.5});
-                }
+            parallaxOut('#videoScreen', () => {
+                document.getElementById('videoScreen').classList.remove('show');
+                document.getElementById('letterScreen').classList.add('show');
+                updateHistory('letter');
+                parallaxIn('#letterScreen');
+                resetEnvelope();
             });
         };
 
+        // Real envelope-opening beat: seal breaks, flap unfolds, then the letter slides up into view.
+        function resetEnvelope() {
+            const envelope = document.getElementById('envelopeEl');
+            const flap = document.getElementById('envelopeFlap');
+            const seal = document.getElementById('waxSeal');
+            const scene = document.getElementById('envelopeScene');
+            const letter = document.getElementById('letterContainer');
+            if (!envelope) return;
+            envelope.classList.remove('opened');
+            flap.classList.remove('open');
+            seal.classList.remove('breaking');
+            scene.classList.remove('hidden');
+            gsap.set(scene, { clearProps:'opacity' });
+            letter.classList.remove('show');
+            gsap.set(letter, { opacity:0, y:40 });
+        }
+
+        window.openEnvelope = function() {
+            const envelope = document.getElementById('envelopeEl');
+            const flap = document.getElementById('envelopeFlap');
+            const seal = document.getElementById('waxSeal');
+            const scene = document.getElementById('envelopeScene');
+            const letter = document.getElementById('letterContainer');
+            if (!envelope || envelope.classList.contains('opened')) return;
+            envelope.classList.add('opened');
+            vibrate([10, 30]);
+
+            // The wax seal cracks and falls away first
+            seal.classList.add('breaking');
+            setTimeout(() => {
+                // Then the flap folds open, like unsealing a real envelope
+                flap.classList.add('open');
+                vibrate(15);
+            }, 280);
+
+            // Finally the letter slides up out of the envelope and the envelope fades out
+            setTimeout(() => {
+                letter.classList.add('show');
+                gsap.fromTo(letter, { opacity:0, y:50, scale:0.96 }, { opacity:1, y:0, scale:1, duration:0.7, ease:'power2.out' });
+                gsap.to(scene, { opacity:0, duration:0.5, onComplete:() => scene.classList.add('hidden') });
+            }, 900);
+        };
+
         window.goToSecretScreen = function() {
-            gsap.to('#letterScreen', { 
-                opacity:0, 
-                duration:0.5, 
-                onComplete:()=>{
-                    document.getElementById('letterScreen').classList.remove('show');
-                    document.getElementById('secretScreen').classList.add('show');
-                    updateHistory('secret');
-                    gsap.fromTo('#secretScreen', {opacity:0}, {opacity:1, duration:0.5});
-                }
+            parallaxOut('#letterScreen', () => {
+                document.getElementById('letterScreen').classList.remove('show');
+                document.getElementById('secretScreen').classList.add('show');
+                updateHistory('secret');
+                parallaxIn('#secretScreen');
             });
         };
 
